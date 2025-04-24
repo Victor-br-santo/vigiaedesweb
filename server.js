@@ -5,6 +5,11 @@ app.use(express.json());
 
 const usuarios = [];
 
+// Rota raiz (evita o "Cannot GET /")
+app.get("/", (req, res) => {
+  res.send("API está no ar! 🌐");
+});
+
 app.get("/usuarios", (req, res) => {
   res.json(usuarios);
 });
