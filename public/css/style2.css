@@ -1,0 +1,239 @@
+/* style.css */
+
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    line-height: 1.6;
+  }
+  
+  .hero {
+    background: #e6f0ff;
+    padding: 60px 20px;
+  }
+  
+  .hero-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-around;
+    flex-wrap: wrap;
+  }
+  
+  .hero-text {
+    max-width: 500px;
+  }
+  
+  .hero-text h1 {
+    font-size: 2.5rem;
+    color: #0055a5;
+  }
+  
+  .hero-text p {
+    font-size: 1.2rem;
+    color: #333;
+  }
+  
+  .hero-image img {
+    width: 100%;
+    max-width: 400px;
+    height: auto;
+    border-radius: 12px;
+  }
+  
+  /* Sobre Nós */
+  .sobre {
+    padding: 40px 20px;
+    background: #f9f9f9;
+    text-align: center;
+  }
+  
+  .cards {
+    display: flex;
+    justify-content: center;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-top: 30px;
+  }
+  
+  .sobre h2 {
+    text-align: center;
+    font-size: 32px;
+    margin-bottom: 20px;
+  }
+  
+  .cards {
+    display: flex;
+    justify-content: space-around;
+    gap: 20px;
+  }
+  
+  .card {
+    background-color: #fff;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.1);
+    width: 280px;
+    text-align: center;
+  }
+  
+  .card i {
+    font-size: 50px;
+    color: #3faffa;
+    margin-bottom: 15px;
+  }
+  
+  .card h3 {
+    font-size: 24px;
+    margin-bottom: 10px;
+  }
+  
+  .card p {
+    font-size: 16px;
+    color: #555;
+  }
+  
+  .card {
+    background: white;
+    padding: 20px;
+    border-radius: 12px;
+    box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+    width: 280px;
+    transition: transform 0.3s ease;
+  }
+  
+  .card:hover {
+    transform: scale(1.05);
+  }
+  
+  /* Contato */
+  .contato {
+    background: #023564;
+    color: white;
+    padding: 40px 20px;
+    text-align: center;
+  }
+  
+  .contato h2 {
+    margin-bottom: 20px;
+  }
+
+  .contato {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    padding: 50px 20px;
+    gap: 50px;
+  }
+  
+  .contato-info {
+    width: 45%; /* Coloca a área de informações à esquerda */
+  }
+  
+  .contato-info h2 {
+    font-size: 32px;
+    margin-bottom: 15px;
+  }
+  
+  .contato-info p {
+    font-size: 18px;
+    margin: 10px 0;
+  }
+  
+  .contato-form {
+    width: 45%; /* Coloca o formulário à direita */
+    background-color: #a7a7a7;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  }
+  
+  .contato-form h3 {
+    font-size: 24px;
+    margin-bottom: 20px;
+  }
+  
+  .contato-form form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  .contato-form label {
+    font-size: 16px;
+    margin-bottom: 5px;
+  }
+  
+  .contato-form input,
+  .contato-form textarea {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #000000;
+    border-radius: 5px;
+  }
+  
+  .contato-form button {
+    background-color: #023564;
+    color: rgb(255, 255, 255);
+    font-size: 16px;
+    padding: 12px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .contato-form button:hover {
+    background-color: #3a55cc;
+  }
+  
+  
+  /* Mapa */
+  .mapa {
+    padding: 40px 20px;
+    text-align: center;
+  }
+
+  .navbar {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: #1a2957;
+    padding: 10px 0;
+    z-index: 999;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+  }
+  
+  .navbar nav {
+    display: flex;
+    justify-content: center;
+  }
+  
+  .nav-links {
+    list-style: none;
+    display: flex;
+    gap: 30px;
+  }
+  
+  .nav-links li a {
+    color: white;
+    text-decoration: none;
+    font-weight: bold;
+    transition: color 0.3s ease;
+    padding: 20px;
+  }
+  
+  .nav-links li a:hover {
+    color: #FFD700; /* Dourado ou outro destaque */
+  }
+  
+  /* Adiciona espaçamento no topo pra não esconder seções */
+  body {
+    padding-top: 70px;
+  }
+  
+  /* Scroll suave */
+  html {
+    scroll-behavior: smooth;
+  }
+  
+  
