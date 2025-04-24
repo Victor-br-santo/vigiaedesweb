@@ -1,10 +1,13 @@
 const express = require("express");
 const cors = require("cors");
+const path = require("path");
 const app = express();
 const conexao = require("./db"); // Conexão com o banco de dados
 
 app.use(cors());
 app.use(express.json());
+
+app.use(express.static(path.join(__dirname, "public")));
 
 // Rota raiz (evita o "Cannot GET /")
 app.get("/", (req, res) => {
@@ -40,7 +43,7 @@ app.post("/usuarios", (req, res) => {
 });
 
 // Inicializa o servidor
-const PORT = process.env.PORT || 3001;
+const PORT = process.env.PORT || 5000;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
