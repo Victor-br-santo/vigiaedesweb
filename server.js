@@ -10,9 +10,9 @@ app.use(express.json());
 app.use(express.static(path.join(__dirname, "public")));
 
 // Rota raiz (evita o "Cannot GET /")
-app.get("/", (req, res) => {
-  res.send("API está no ar! 🌐");
-});
+//app.get("/", (req, res) => {
+//  res.send("API está no ar! 🌐");
+//});
 
 // Rota GET para buscar usuários no banco
 app.get("/usuarios", (req, res) => {
