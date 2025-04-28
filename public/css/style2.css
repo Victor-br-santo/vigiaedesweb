@@ -10,7 +10,7 @@ body {
 
   .hero {
     height: 100vh;
-    background-image: url('https://i.pinimg.com/736x/88/59/3c/88593c49d1436bef1e3035b900b01d26.jpg');
+    background-image:linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://i.pinimg.com/736x/88/59/3c/88593c49d1436bef1e3035b900b01d26.jpg');
     background-size: cover;
     background-position: center;
     background-repeat: no-repeat;
@@ -267,6 +267,20 @@ body {
   }
 
                                      /* NAV BAR */
+  
+                                     .pagina-interna .navbar {
+                                      background-color: #070b30; /* Azul escuro */
+                                      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                                      padding: 10px 0; /* Navbar já menor */
+                                      position: fixed;
+                                      width: 100%;
+                                      z-index: 1000;
+                                    }
+                                    
+                                    .pagina-interna .nav-links li a {
+                                      color: white;
+                                    }
+                                    
   .navbar {
     position: fixed;
     top: 0;
