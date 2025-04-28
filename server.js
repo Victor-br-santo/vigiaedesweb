@@ -43,7 +43,7 @@ app.post("/usuarios", (req, res) => {
 });
 
 // Inicializa o servidor
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3306;
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });

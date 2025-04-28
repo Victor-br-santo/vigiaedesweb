@@ -2,7 +2,7 @@
 
 // Animação simples de desaparecimento ao scrollar
 window.addEventListener("scroll", () => {
-    const elements = document.querySelectorAll(".card, .hero-text, .hero-image, .contato, .mapa");
+    const elements = document.querySelectorAll(".card, .hero-text, .hero-image, .contato, .mapa, .whatsapp, .sobre-nos");
     const windowHeight = window.innerHeight;
   
     elements.forEach(el => {
@@ -27,3 +27,13 @@ window.addEventListener("scroll", () => {
     });
   });
   
+  // Script para mudar a navbar quando rolar a página
+window.addEventListener('scroll', function() {
+  const navbar = document.querySelector('.navbar');
+  
+  if (window.scrollY > 150) { 
+    navbar.classList.add('navbar-rolagem');
+  } else {
+    navbar.classList.remove('navbar-rolagem');
+  }
+});
