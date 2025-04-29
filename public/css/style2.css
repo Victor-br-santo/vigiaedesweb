@@ -52,14 +52,6 @@ body {
     text-align: center;
   }
   
-  .cards {
-    display: flex;
-    justify-content: center;
-    gap: 20px;
-    flex-wrap: wrap;
-    margin-top: 30px;
-  }
-  
   .sobre h2 {
     text-align: center;
     font-size: 32px;
@@ -90,6 +82,8 @@ body {
     text-align: center;
     transition: transform 0.10s ease, box-shadow 0.10s ease; 
     padding-bottom: 50px;
+    height: 200px;
+    overflow: hidden;
   }
   
   .card i {
@@ -125,7 +119,7 @@ body {
   
   .sobre-nos h2 {
     font-size: 36px;
-    color: #023564;
+    color: #070b30;
     margin-bottom: 50px;
   }
   
@@ -161,43 +155,73 @@ body {
     border-radius: 12px;
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
   }
-
-  .missao-visao-valores {
-    padding: 60px 5%;
-    background-color: #e6f0ff;
-    display: flex;
-    gap: 30px;
-    flex-wrap: wrap;
-    justify-content: center;
+   /* MISSAO */
+  .secao-mvv {
+    background-color: #070b30;
+    padding: 80px 5% 50px; /* Espaço maior no fim para separar da próxima seção */
     text-align: center;
   }
   
-  .mvv-card {
-    background: white;
-    padding: 30px;
-    border-radius: 12px;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+  .titulo-mvv {
+    font-size: 36px;
+    color: #ffffff;
+    margin-bottom: 60px;
+    text-transform: uppercase;
+  }
+  
+  .container-mvv {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    flex-wrap: nowrap;
+    gap: 20px;
+    position: relative;
+  }
+  
+  .mvv-bloco {
     flex: 1;
-    min-width: 280px;
-    max-width: 350px;
+    background-color: #070b30;
+    padding: 30px;
+    text-align: left;
+    font-family: 'Arial', sans-serif;
   }
   
-  .mvv-card h3 {
-    color: #023564;
-    font-size: 24px;
+  .mvv-bloco i {
+    font-size: 36px;
+    color: #dfd117;
     margin-bottom: 15px;
+    display: block;
   }
   
-  .mvv-card p, .mvv-card ul {
+  .mvv-bloco h3 {
+    font-size: 22px;
+    color: #ffffff;
+    margin-bottom: 15px;
+    text-transform: uppercase;
+    font-weight: bold;
+  }
+  
+  .mvv-bloco p,
+  .mvv-bloco ul {
     font-size: 16px;
-    color: #555;
-    line-height: 1.6;
+    color: #ffffff;
+    line-height: 1.7;
   }
   
-  .mvv-card ul {
-    list-style: disc inside;
-    padding-left: 0;
+  .mvv-bloco ul {
+    list-style-type: disc;
+    padding-left: 20px;
+    margin-top: 10px;
   }
+  
+  /* Linhas verticais entre os blocos */
+  .mvv-linha-vertical {
+    width: 2px;
+    height: 200px;
+    background-color: #ffffff;
+    margin: 0 10px;
+  }
+  
   
 /* CONTATO BONITÃO */
 .contato {
@@ -208,6 +232,7 @@ body {
   flex-wrap: wrap;
   justify-content: space-between;
   gap: 50px;
+  margin-top: 80px;
 }
 .contato-info {
   flex: 1;
@@ -334,6 +359,41 @@ body {
 
 .social-icons a:hover {
   color: #FFD700; /* dourado no hover */
+}
+/* PARCEIROS */
+.titulo-parceiros {
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 40px;
+  text-transform: uppercase;
+}
+
+.parceiros {
+  background-color: #c4c4c4; /* faixa cinza */
+  padding: 30px 5%;
+  text-align: center;
+}
+
+.parceiros-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 50px;
+  flex-wrap: wrap;
+}
+
+.logo-parceiro {
+  max-height: 250px;
+  filter: grayscale(100%);
+  opacity: 0.7;
+  justify-content: center;
+  transition: filter 0.4s ease, opacity 0.4s ease, transform 0.3s ease;
+}
+
+.logo-parceiro:hover {
+  filter: grayscale(0%);
+  opacity: 1;
+  transform: scale(1.05); /* dá um leve zoom ao passar o mouse */
 }
 
 

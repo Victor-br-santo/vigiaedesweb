@@ -2,7 +2,7 @@
 
 // Animação simples de desaparecimento ao scrollar
 window.addEventListener("scroll", () => {
-    const elements = document.querySelectorAll(".card, .contato, .mapa, .whatsapp, .sobre-nos");
+    const elements = document.querySelectorAll(".card, .contato, .mapa, .whatsapp, .sobre-nos, .secao-mvv, .parceiros");
     const windowHeight = window.innerHeight;
   
     elements.forEach(el => {
@@ -20,7 +20,7 @@ window.addEventListener("scroll", () => {
   
   // Inicializa com opacidade zero para os elementos
   window.addEventListener("DOMContentLoaded", () => {
-    const elements = document.querySelectorAll(".card, .contato, .mapa");
+    const elements = document.querySelectorAll(".card, .contato, .mapa, .secao-mvv, .parceiros");
     elements.forEach(el => {
       el.style.opacity = 0;
       el.style.transform = "translateY(50px)";
