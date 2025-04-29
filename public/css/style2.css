@@ -102,7 +102,7 @@ body {
   }
   
   .card:hover {
-    transform: scale(2.5); 
+    transform: scale(1.05); 
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6); 
   }
   
@@ -156,7 +156,7 @@ body {
   }
    /* MISSAO */
   .secao-mvv {
-    background-color: #070b30;
+    background-color: #929294;
     padding: 80px 5% 50px; /* Espaço maior no fim para separar da próxima seção */
     text-align: center;
   }
@@ -179,7 +179,7 @@ body {
   
   .mvv-bloco {
     flex: 1;
-    background-color: #070b30;
+    background-color: #929294;
     padding: 30px;
     text-align: left;
     font-family: 'Arial', sans-serif;
@@ -187,7 +187,7 @@ body {
   
   .mvv-bloco i {
     font-size: 36px;
-    color: #dfd117;
+    color: #a01616;
     margin-bottom: 15px;
     display: block;
   }
@@ -434,7 +434,7 @@ body {
   }
   
 .navbar-brand {
-  color: white;
+  color: rgb(255, 255, 255);
   text-decoration: none;
   font-size: 1.4rem; /* Tamanho do texto do nome */
   font-weight: bold;
@@ -442,8 +442,8 @@ body {
 }
 
 .navbar-brand img {
-  height: 100px;         
-  max-height: 100px;
+  height: 124px;         
+  max-height: 124px;
   width: auto;
   display: block;
   padding-left: 20px;
@@ -451,7 +451,7 @@ body {
 }
 
 .navbar.navbar-rolagem .navbar-brand img {
-  height: 90px; /* logo menor ao rolar */
+  height: 115px; /* logo menor ao rolar */
 }
 
 .navbar-rolagem {
@@ -476,7 +476,7 @@ body {
   }
   
   .nav-links li a:hover {
-    color: #e9d417; /* Dourado ou outro destaque */
+    color: #e7d000; /* Dourado ou outro destaque */
   }
   
   /* Adiciona espaçamento no topo pra não esconder seções */
