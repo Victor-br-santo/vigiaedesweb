@@ -159,107 +159,172 @@ body {
   box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
 }
 
+.sobre-texto .apresentacao {
+  font-size: 18px;
+  color: #555;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+}
+
 .sobre-texto {
   flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  gap: 15px;
 }
 
 .sobre-texto h2 {
-  font-size: 2rem;
+  font-size: 36px;
   color: #023564;
-  margin-bottom: 10px;
+  margin: 0;
 }
 
 .sobre-texto p {
   font-size: 1.2rem;
   color: #555;
   line-height: 1.6;
+  max-width: 600px;
 }
 
-  /* Contato */
-  .contato {
-    background: #070b30;
-    color: white;
-    padding: 40px 20px;
-    text-align: center;
-  }
-  
-  .contato h2 {
-    margin-bottom: 20px;
-  }
+/* CONTATO BONITÃO */
+.contato {
+  background:  #070b30;
+  color: white;
+  padding: 60px 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 50px;
+}
+.contato-info {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start; /* continua alinhado à esquerda */
+  padding: 0 60px; /* AUMENTEI o padding para jogar mais pra direita */
+}
 
-  .contato {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    padding: 50px 20px;
-    gap: 50px;
-  }
-  
-  .contato-info {
-    width: 45%; /* Coloca a área de informações à esquerda */
-  }
-  
-  .contato-info h2 {
-    font-size: 32px;
-    margin-bottom: 15px;
-  }
-  
-  .contato-info p {
-    font-size: 18px;
-    margin: 10px 0;
-  }
-  
-  .contato-form {
-    width: 45%; /* Coloca o formulário à direita */
-    background-color: #b6b6b6;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  }
-  
-  .contato-form h3 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    color: #000000;
-  }
-  
-  .contato-form form {
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-  }
-  
-  .contato-form label {
-    font-size: 16px;
-    margin-bottom: 5px;
-    color:  #000000;
-  }
-  
-  .contato-form input,
-  .contato-form textarea {
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #000000;
-    border-radius: 5px;
-    background-color: #bebebe;
-  }
-  
-  .contato-form button {
-    background-color:#070b30;
-    color: rgb(255, 255, 255);
-    font-size: 16px;
-    padding: 12px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s;
-  }
-  
-  .contato-form button:hover {
-    background-color: #293a83;
-  }
-  
-  
+.contato-info h2 {
+  margin-bottom: 20px;
+  font-size: 32px;
+}
+
+.contato-info p,
+.contato-info a {
+  font-size: 18px;
+  margin: 10px 0;
+  color: white;
+  text-decoration: none; /* sem sublinhado */
+  display: flex;
+  align-items: center;
+  gap: 10px; /* separa o ícone do texto */
+}
+
+.contato-info i {
+  font-size: 20px;
+  color: #FFD700; /* ícones dourados */
+}
+
+.contato-info a:hover {
+  color: #FFD700; /* texto muda pra dourado ao hover */
+}
+
+.contato-form {
+  flex: 1;
+  background: white;
+  padding: 30px;
+  border-radius: 10px;
+  box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+}
+
+.contato-form h3 {
+  color: #070b30;
+  font-size: 28px;
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+/* Estilização dos campos */
+.input-group {
+  position: relative;
+  margin-bottom: 25px;
+}
+
+.input-group input,
+.input-group textarea {
+  width: 100%;
+  padding: 15px 10px 5px;
+  font-size: 16px;
+  border: none;
+  border-bottom: 2px solid #ccc;
+  background: transparent;
+  color: #070b30;
+  outline: none;
+  transition: 0.3s;
+}
+
+.input-group label {
+  position: absolute;
+  top: 15px;
+  left: 10px;
+  color: #666;
+  font-size: 16px;
+  pointer-events: none;
+  transition: 0.3s;
+}
+
+.input-group input:focus,
+.input-group textarea:focus {
+  border-bottom: 2px solid #070b30;
+}
+
+.input-group input:focus + label,
+.input-group input:not(:placeholder-shown) + label,
+.input-group textarea:focus + label,
+.input-group textarea:not(:placeholder-shown) + label {
+  top: -10px;
+  font-size: 12px;
+  color:#070b30;
+}
+
+/* Botão */
+.contato-form button {
+  width: 100%;
+  background-color: #070b30;
+  color: white;
+  padding: 15px;
+  font-size: 18px;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: 0.4s;
+}
+
+.contato-form button:hover {
+  background-color: #082e55;
+}
+
+.social-icons {
+  margin-top: 20px;
+  display: flex;
+  gap: 15px;
+  justify-content: center;
+}
+
+.social-icons a {
+  color: white;
+  font-size: 24px;
+  transition: color 0.3s ease;
+  padding: 5px;
+}
+
+.social-icons a:hover {
+  color: #FFD700; /* dourado no hover */
+}
+
+
   /* MAPA */
   .mapa {
     padding: 40px 20px;
