@@ -45,13 +45,6 @@ body {
     color: #c2c2c2;
   }
   
-  .hero-image img {
-    width: 100%;
-    max-width: 400px;
-    height: auto;
-    border-radius: 12px;
-  }
-  
   /* Serviços */
   .sobre {
     padding: 40px 20px;
@@ -124,69 +117,88 @@ body {
     text-decoration: none;
     color: inherit;
   }
+  .sobre-nos {
+    padding: 80px 5% 40px;
+    background-color: #f9f9f9;
+    text-align: center;
+  }
   
-/* SOBRE NÓS */
-.sobre-nos {
-  background-color: #f9f9f9;
-  padding: 60px 20px;
-}
-.sobre-nos h2 {
-  text-align: center;
-  font-size: 32px;
-  margin-bottom: 20px;
-}
-.sobre-container {
-  display: flex;
-  flex-direction: column;
-  gap: 60px;
-}
+  .sobre-nos h2 {
+    font-size: 36px;
+    color: #023564;
+    margin-bottom: 50px;
+  }
+  
+  .bloco-sobre {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    margin-bottom: 60px;
+    gap: 40px;
+    flex-wrap: wrap;
+  }
+  
+  .bloco-sobre.inverso {
+    flex-direction: row-reverse;
+  }
+  
+  .bloco-texto {
+    flex: 1;
+    font-size: 18px;
+    color: #333;
+    line-height: 1.8;
+    text-align: left;
+  }
+  
+  .bloco-imagem {
+    flex: 1;
+    text-align: center;
+  }
+  
+  .bloco-imagem img {
+    width: 100%;
+    max-width: 450px;
+    border-radius: 12px;
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+  }
 
-.sobre-bloco {
-  display: flex;
-  align-items: center;
-  gap: 40px;
-  flex-wrap: wrap;
-}
-
-.sobre-reverso {
-  flex-direction: row-reverse;
-}
-
-.sobre-imagem img {
-  width: 100%;
-  max-width: 400px;
-  border-radius: 12px;
-  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-}
-
-.sobre-texto .apresentacao {
-  font-size: 18px;
-  color: #555;
-  text-transform: uppercase;
-  letter-spacing: 1px;
-}
-
-.sobre-texto {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  gap: 15px;
-}
-
-.sobre-texto h2 {
-  font-size: 36px;
-  color: #023564;
-  margin: 0;
-}
-
-.sobre-texto p {
-  font-size: 1.2rem;
-  color: #555;
-  line-height: 1.6;
-  max-width: 600px;
-}
-
+  .missao-visao-valores {
+    padding: 60px 5%;
+    background-color: #e6f0ff;
+    display: flex;
+    gap: 30px;
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+  
+  .mvv-card {
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    flex: 1;
+    min-width: 280px;
+    max-width: 350px;
+  }
+  
+  .mvv-card h3 {
+    color: #023564;
+    font-size: 24px;
+    margin-bottom: 15px;
+  }
+  
+  .mvv-card p, .mvv-card ul {
+    font-size: 16px;
+    color: #555;
+    line-height: 1.6;
+  }
+  
+  .mvv-card ul {
+    list-style: disc inside;
+    padding-left: 0;
+  }
+  
 /* CONTATO BONITÃO */
 .contato {
   background:  #070b30;
@@ -350,7 +362,7 @@ body {
     position: fixed;
     top: 0;
     width: 100%;
-    padding: 25px 4%; /* Deixa mais espaçado */
+    padding: 30px 4%; /* Deixa mais espaçado */
     background-color:transparent;
     z-index: 1000;
     transition: .5s;
@@ -367,12 +379,25 @@ body {
   text-decoration: none;
   font-size: 1.4rem; /* Tamanho do texto do nome */
   font-weight: bold;
-  margin-left: 55px; /* Adiciona margem para um melhor alinhamento */
+  margin-left: 50px; /* Adiciona margem para um melhor alinhamento */
+}
+
+.navbar-brand img {
+  height: 100px;         
+  max-height: 100px;
+  width: auto;
+  display: block;
+  padding-left: 20px;
+  transition: height 0.4s ease;
+}
+
+.navbar.navbar-rolagem .navbar-brand img {
+  height: 90px; /* logo menor ao rolar */
 }
 
 .navbar-rolagem {
   background-color: #070b30; /* azul escuro */
-  padding: 8px 4%;
+  padding: 10px 4%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
 
