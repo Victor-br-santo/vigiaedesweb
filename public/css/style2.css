@@ -456,7 +456,7 @@ body {
 }
 
 .navbar-rolagem {
-  background-color: #070b30; /* azul escuro */
+  background-color: #ffffff; /* azul escuro */
   padding: 10px 4%;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.4);
 }
@@ -469,7 +469,7 @@ body {
   }
   
   .nav-links li a {
-    color: white;
+    color: rgb(0, 0, 0);
     text-decoration: none;
     font-weight: bold;
     transition: color 0.3s ease;
