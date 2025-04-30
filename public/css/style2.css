@@ -509,30 +509,33 @@ html {
 .social-icons a:hover {
   color: #FFD700; /* dourado no hover */
 }
-/* PARCEIROS */
 .titulo-parceiros {
+  text-align: center;
+  margin: 0 auto;
   font-size: 28px;
   color: #333;
   margin-bottom: 40px;
   text-transform: uppercase;
 }
-
-.parceiros {
-  background-color: #c4c4c4; /* faixa cinza */
-  padding: 30px 5%;
-  text-align: center;
+.parceiros-container {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+  background-color: #bdbdbd;
 }
 
-.parceiros-container {
+.parceiros-scroll {
   display: flex;
-  justify-content: center;
+  gap: 40px;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
   align-items: center;
-  gap: 50px;
-  flex-wrap: wrap;
+  padding: 10px;
+  min-width: max-content;
 }
 
 .logo-parceiro {
-  max-height: 250px;
+  height: 250px;
+  flex-shrink: 0;
   filter: grayscale(100%);
   opacity: 0.7;
   justify-content: center;
@@ -542,8 +545,9 @@ html {
 .logo-parceiro:hover {
   filter: grayscale(0%);
   opacity: 1;
-  transform: scale(1.05); /* dá um leve zoom ao passar o mouse */
+  transform: scale(1.05);
 }
+
 
 
   /* MAPA */
