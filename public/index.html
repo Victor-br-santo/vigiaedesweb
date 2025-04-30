@@ -7,37 +7,46 @@
   <link rel="stylesheet" href="css/style2.css">
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="icon" href="img/sla  (Apresentação) (1).svg" type="image/png">
+  <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Bai+Jamjuree:wght@400;600;700&display=swap" rel="stylesheet">
 
 </head>
 <body>
  
-  <div class="topo">
+  <header class="navbar">
+    <nav class="navbar-container">
+      <!-- Logo mais centralizada -->
+      <a href="#inicio" class="navbar-brand">
+        <img src="img/logo_editada.svg" alt="Logo VigiaAedes">
+      </a>
   
-    <header class="navbar">
-      <nav>
-        <a href="#inicio" class="navbar-brand">
-          <img src="img/sla  (Apresentação) (1).svg" alt="Logo VigiaAedes">
-        </a>
-        
-        <ul class="nav-links">
-          <li><a href="#inicio">Início</a></li>
-          <li><a href="#servicos">Serviços</a></li>
-          <li><a href="#sobre">Sobre</a></li>
-          <li><a href="#contato">Contato</a></li>
-        </ul>
-      </nav>
-    </header>
-    
-    <header id="inicio" class="hero">
-      <div class="hero-content">
-        <div class="hero-text">
-          <h1>VigiAedes Soluções Integradas</h1>
-          <p>Soluções inovadoras para prevenção e controle do Aedes aegypti e albopictus.</p>
-        </div>
+      <!-- Links da nav mais deslocados à esquerda -->
+      <ul class="nav-links">
+        <li><a href="#inicio">Início</a></li>
+        <li><a href="#servicos">Serviços</a></li>
+        <li><a href="#sobre">Sobre</a></li>
+        <li><a href="#contato">Contato</a></li>
+      </ul>
+  
+      <!-- Espaço reservado para botão login -->
+      <div class="login-area">
+        <button class="btn-login">Compartilhe seu desafio</button>
       </div>
-    </header>
+    </nav>
+  </header>
   
-  </div>
+
+<!-- CONTEÚDO COM HERO -->
+<div class="topo">
+  <header id="inicio" class="hero">
+    <div class="hero-content">
+      <div class="hero-text">
+        <h1>VigiAedes Soluções Integradas</h1>
+        <p>Soluções inovadoras para prevenção e controle do Aedes aegypti e albopictus.</p>
+      </div>
+    </div>
+  </header>
+</div>
+
   
 <!-- Sobre Nós -->
 <section id="sobre" class="sobre-nos">
@@ -156,22 +165,22 @@
   <div class="contato-info">
     <h2>Entre em Contato</h2>
   
-    <p><a href="mailto:contato@vigiaedes.com.br" target="_blank">
-      <i class="fas fa-envelope"></i>contato@vigiaedes.com.br
+    <p><a href="mailto:vigiaedes.solucoes@gmail.com" target="_blank">
+      <i class="fas fa-envelope"></i>vigiaedes.solucoes@gmail.com
     </a></p>
   
-    <p><a href="https://wa.me/5598999999999?text=Ol%C3%A1%2C%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es" target="_blank">
+    <!-- <p><a href="https://wa.me/5598999999999?text=Ol%C3%A1%2C%20gostaria%20de%20mais%20informa%C3%A7%C3%B5es" target="_blank">
       <i class="fas fa-phone"></i>(98) 99999-9999
-    </a></p>
+    </a></p> -->
   
-    <p><a href="https://maps.google.com/?q=Centro de São Luís - MA" target="_blank">
-      <i class="fas fa-map-marker-alt"></i> Centro de São Luís - MA
+    <p><a href=" https://maps.google.com/?q=Centro de Macapá - AP" target="_blank">
+      <i class="fas fa-map-marker-alt"></i>Centro de Macapá - AP
     </a></p>
   
     <div class="social-icons">
-      <a href="https://www.instagram.com/" target="_blank"><i class="fab fa-instagram"></i></a>
-      <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a>
-      <a href="https://wa.me/5598999999999" target="_blank"><i class="fab fa-whatsapp"></i></a>
+      <a href="https://www.instagram.com/vigiaedes.solucoes?igsh=M3JyZW9qMGVvang%3D&utm_source=qr" target="_blank"><i class="fab fa-instagram"></i></a>
+      <!-- <a href="https://www.facebook.com/" target="_blank"><i class="fab fa-facebook-f"></i></a> -->
+      <!-- <a href="https://wa.me/5598999999999" target="_blank"><i class="fab fa-whatsapp"></i></a> -->
       <a href="mailto:contato@vigiaedes.com.br" target="_blank"><i class="fas fa-envelope"></i></a>
     </div>
   </div>
@@ -199,8 +208,8 @@
     </form>
   </div>
 </section>
-
-  <!-- Seção WhatsApp -->
+<!-- 
+   Seção WhatsApp 
 <section id="whatsapp" class="whatsapp">
   <div class="whatsapp-content">
     <h2>Chame no WhatsApp, se preferir</h2>
@@ -208,7 +217,7 @@
       WhatsApp
     </a>
   </div>
-</section>
+</section> -->
   
 
   <!-- Mapa -->
@@ -217,6 +226,49 @@
     <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3918.315358275316!2d-44.30371058460292!3d-2.5383694983885015!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x7f6916b4c3e29f3%3A0xe1f9c98b8743e57b!2sCentro%20de%20S%C3%A3o%20Lu%C3%ADs%20-%20MA!5e0!3m2!1spt-BR!2sbr!4v1685917363647!5m2!1spt-BR!2sbr" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
   </section>
 
+  <footer class="footer">
+    <div class="footer-container">
+      
+      <!-- Logo -->
+      <div class="footer-logo">
+        <a href="#inicio">
+        <img src="img/logo_editada.svg" alt="Logo VigiAedes"></a>
+        <p>Inovação que combate informação que protege.</p>
+      </div>
+  
+      <!-- Links de navegação -->
+      <div class="footer-links">
+        <h4>Navegação</h4>
+        <ul>
+          <li><a href="#inicio">Início</a></li>
+          <li><a href="#servicos">Serviços</a></li>
+          <li><a href="#sobre">Sobre</a></li>
+          <li><a href="#contato">Contato</a></li>
+        </ul>
+      </div>
+  
+      <!-- Contato -->
+      <div class="footer-contact">
+        <h4>Contato</h4>
+        <p><i class="fas fa-envelope"></i> vigiaedes.solucoes@gmail.com</p>
+        <!-- <p><i class="fas fa-phone"></i> (98) 99999-9999</p> -->
+        <p><i class="fas fa-map-marker-alt"></i> Centro, Macapá - AP</p>
+      
+
+         <div class="footer-social">
+           <a href="https://facebook.com" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+           <a href="https://instagram.com" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+           <a href="https://linkedin.com" target="_blank" aria-label="LinkedIn"><i class="fab fa-linkedin-in"></i></a>
+           <a href="https://twitter.com" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+        </div>
+      </div>
+    </div>
+  
+    <div class="footer-bottom">
+      <p>&copy; 2025 VigiAedes. Todos os direitos reservados.</p>
+    </div>
+  </footer>
+  
   <script src="script.js"></script>
 </body>
 </html>
