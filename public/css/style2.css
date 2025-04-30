@@ -1,52 +1,184 @@
 /* style2.css */
+/* style2.css - REVISADO PARA RESPONSIVIDADE GERAL */
 
 body {
-   font-family: 'Arimo', 'Bai Jamjuree', sans-serif;
-    margin: 0;
-    line-height: 1.6;
-    padding: 0;
-    overflow-x: hidden;
-  }
-  h1, h2, h3, h4, h5, .btn-login {
-    font-family: 'Bai Jamjuree', sans-serif;
+  font-family: 'Arimo', 'Bai Jamjuree', sans-serif;
+  margin: 0;
+  padding: 0;
+  overflow-x: hidden;
+  line-height: 1.6;
+  padding-top: 70px;
+}
+
+h1, h2, h3, h4, h5, .btn-login {
+  font-family: 'Bai Jamjuree', sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+/* NAVBAR COM MENU HAMBÚRGUER */
+.navbar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: white;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+  z-index: 1000;
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.navbar-brand img {
+  height: 60px;
+  margin-left: 20px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+
+.nav-links li a:hover {
+  color: #ff0000;
+}
+
+.login-area {
+  margin-left: 20px;
+}
+
+.btn-login {
+  background-color: #585858;
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #b30000;
+}
+
+.menu-toggle {
+  display: none;
+  font-size: 24px;
+  background: none;
+  border: none;
+  cursor: pointer;
+  margin-left: 20px;
+}
+
+@media (max-width: 768px) {
+  .navbar-container {
+    flex-direction: row;
+    justify-content: space-between;
   }
 
-  .hero {
-    height: 100vh;
-    background-image:linear-gradient(rgba(0, 0, 0, 0.3), rgba(0, 0, 0, 0.3)), url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1415&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
-    background-size: cover;
-    background-position: center;
-    background-repeat: no-repeat;
+  .nav-links {
+    position: absolute;
+    top: 70px;
+    right: 0;
+    background-color: white;
+    flex-direction: column;
+    width: 100%;
+    display: none;
+    border-top: 1px solid #ccc;
+  }
+
+  .nav-links.active {
     display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 0;
-    position: relative;
   }
 
-  .hero-content {
-    position: absolute; 
-    display: flex;
-    align-items: center;
-    justify-content: space-around;
-    flex-wrap: wrap;
-    z-index: 1;
+  .menu-toggle {
+    display: block;
   }
 
-  .hero-text {
-    max-width: 500px;
+  .login-area {
+    order: -1;
   }
-  
+}
+
+/* HERO SECTION */
+.hero {
+  height: 100vh;
+  background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.3)), url('https://images.unsplash.com/photo-1460925895917-afdab827c52f?q=80&w=1415&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D');
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 20px;
+}
+
+.btn-fale-conosco {
+  display: inline-block;
+  margin-top: 25px;
+  padding: 12px 30px;
+  background-color: #ffffff;
+  color: #070b30;
+  border: 2px solid #ffffff;
+  border-radius: 6px;
+  font-weight: bold;
+  font-size: 16px;
+  text-decoration: none;
+  transition: background-color 0.3s, color 0.3s, transform 0.2s;
+}
+
+.btn-fale-conosco:hover {
+  background-color: #070b30;
+  color: #ffffff;
+  transform: scale(1.05);
+}
+
+
+.hero-text {
+  max-width: 600px;
+}
+
+.hero-text h1 {
+  font-size: 2.5rem;
+  color: #fff;
+}
+
+.hero-text p {
+  font-size: 1.2rem;
+  color: #fff;
+}
+
+@media (max-width: 768px) {
   .hero-text h1 {
-    font-size: 2.5rem;
-    color: #ffffff;
+    font-size: 2rem;
   }
-  
   .hero-text p {
-    font-size: 1.2rem;
-    color: #ffffff;
+    font-size: 1rem;
   }
-  
+}
   /* Serviços */
   .sobre {
     padding: 40px 20px;
