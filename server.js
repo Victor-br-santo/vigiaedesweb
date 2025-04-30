@@ -39,6 +39,26 @@ app.post("/usuarios", (req, res) => {
   });
 });
 
+// Rota POST para receber mensagens do formulário de contato
+app.post("/contato", (req, res) => {
+  const { name, email, message } = req.body;
+
+  const query = "INSERT INTO contatos (nome, email, mensagem) VALUES ($1, $2, $3) RETURNING *";
+
+  conexao.query(query, [name, email, message], (err, results) => {
+    if (err) {
+      console.error("Erro ao inserir mensagem de contato:", err);
+      return res.status(500).json({ mensagem: "Erro ao enviar mensagem de contato" });
+    }
+
+    res.status(201).json({
+      mensagem: "Mensagem enviada com sucesso!",
+      contato: results.rows[0]
+    });
+  });
+});
+
+
 // Inicializa o servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

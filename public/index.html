@@ -8,7 +8,25 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="icon" href="img/sla  (Apresentação) (1).svg" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Bai+Jamjuree:wght@400;600;700&display=swap" rel="stylesheet">
-
+  <script>
+    document.querySelector("form").addEventListener("submit", async function (e) {
+      e.preventDefault();
+  
+      const name = document.getElementById("name").value;
+      const email = document.getElementById("email").value;
+      const message = document.getElementById("message").value;
+  
+      const resposta = await fetch("https://vigiaedesweb.onrender.com/contato", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, email, message }),
+      });
+  
+      const dados = await resposta.json();
+      alert(dados.mensagem);
+    });
+  </script>
+  
 </head>
 <body>
  
@@ -156,7 +174,8 @@
     <div class="parceiros-container">
       <img src="img/Produtos Agrícolas Minimalista Logo (1).svg" alt="Parceiro 1" class="logo-parceiro">
       <img src="img/VigiAedes.svg" alt="Parceiro 2" class="logo-parceiro">
-      <img src="img/parceiro3.png" alt="Parceiro 3" class="logo-parceiro">
+      <img src="img/Made with insMind-WhatsApp Image 2025-04-30 at 11.59.45.png" alt="Parceiro 3" class="logo-parceiro">
+      <img src="img/Made with insMind-WhatsApp Image 2025-04-30 at 12.00.15.png" alt="Parceiro 4" class="logo-parceiro">
     </div>
   </section>
   
@@ -189,7 +208,7 @@
   
   <div class="contato-form">
     <h3>Fale Conosco</h3>
-    <form action="#" method="post">
+    <form action="https://vigiaedesweb.onrender.com/contato" method="post">
       <div class="input-group">
         <input type="text" id="name" name="name" required placeholder=" ">
         <label for="name">Nome</label>
