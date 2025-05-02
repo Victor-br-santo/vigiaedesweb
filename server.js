@@ -4,6 +4,7 @@ const path = require("path");
 const app = express();
 const conexao = require("./db"); // Agora o db.js é configurado para PostgreSQL
 require('dotenv').config();
+const nodemailer = require("nodemailer");
 
 
 app.use(cors());
@@ -39,25 +40,40 @@ app.post("/usuarios", (req, res) => {
   });
 });
 
-// Rota POST para receber mensagens do formulário de contato
-app.post("/contato", (req, res) => {
+app.post("/contato", async (req, res) => {
   const { name, email, message } = req.body;
 
   const query = "INSERT INTO contatos (nome, email, mensagem) VALUES ($1, $2, $3) RETURNING *";
 
-  conexao.query(query, [name, email, message], (err, results) => {
-    if (err) {
-      console.error("Erro ao inserir mensagem de contato:", err);
-      return res.status(500).json({ mensagem: "Erro ao enviar mensagem de contato" });
-    }
+  try {
+    const result = await conexao.query(query, [name, email, message]);
+
+    // Envio de e-mail
+    const transporter = nodemailer.createTransport({
+      service: "gmail", // ou outro como outlook, yahoo, etc
+      auth: {
+        user: process.env.EMAIL_USER,
+        pass: process.env.EMAIL_PASS
+      }
+    });
+
+    await transporter.sendMail({
+      from: process.env.EMAIL_USER,
+      to: process.env.EMAIL_TO,
+      subject: "Nova mensagem de contato",
+      text: `Nome: ${name}\nEmail: ${email}\nMensagem:\n${message}`
+    });
 
     res.status(201).json({
       mensagem: "Mensagem enviada com sucesso!",
-      contato: results.rows[0]
+      contato: result.rows[0]
     });
-  });
-});
 
+  } catch (err) {
+    console.error("Erro no envio de contato:", err);
+    res.status(500).json({ mensagem: "Erro ao enviar mensagem de contato" });
+  }
+});
 
 // Inicializa o servidor
 const PORT = process.env.PORT || 3000;
