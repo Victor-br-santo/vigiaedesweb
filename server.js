@@ -78,6 +78,17 @@ app.post("/contato", async (req, res) => {
   }
 });
 
+app.get("/teste-db", async (req, res) => {
+  try {
+    const result = await conexao.query("SELECT NOW()");
+    res.json({ status: "✅ Conectado ao banco!", hora: result.rows[0].now });
+  } catch (err) {
+    console.error("❌ Erro de conexão com o banco:", err);
+    res.status(500).json({ erro: "Erro ao conectar com o banco de dados" });
+  }
+});
+
+
 // Inicializa o servidor
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
