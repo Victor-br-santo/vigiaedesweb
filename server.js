@@ -6,6 +6,9 @@ const conexao = require("./db"); // Agora o db.js é configurado para PostgreSQL
 require('dotenv').config();
 const nodemailer = require("nodemailer");
 
+const emailUser = process.env.EMAIL_USER;
+const emailPass = process.env.EMAIL_PASS;
+const emailTo = process.env.EMAIL_TO;
 
 app.use(cors());
 app.use(express.json());
