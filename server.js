@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const app = express();
-const conexao = require("./db"); // Agora o db.js é configurado para PostgreSQL
+const pool = require("./db"); // Agora o db.js é configurado para PostgreSQL
 require('dotenv').config();
 const nodemailer = require("nodemailer");
 
@@ -13,7 +13,17 @@ const emailTo = process.env.EMAIL_TO;
 app.use(cors());
 app.use(express.json());
 
+
 app.use(express.static(path.join(__dirname, "public")));
+
+// Testar a conexão com o banco logo após configurar o pool
+pool.query('SELECT NOW()', (err, res) => {
+  if (err) {
+    console.log("Erro ao conectar ao banco:", err); // Caso haja erro
+  } else {
+    console.log("Conexão bem-sucedida:", res.rows); // Se a conexão for bem-sucedida, exibe a data e hora do banco
+  }
+});
 
 // Rota GET para buscar usuários no banco
 app.get("/usuarios", (req, res) => {
