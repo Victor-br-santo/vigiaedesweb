@@ -31,7 +31,7 @@ app.get("/usuarios", (req, res) => {
 // Rota POST para adicionar usuário ao banco
 app.post("/usuarios", (req, res) => {
   const { nome, email } = req.body;
-
+  console.log("📩 Dados recebidos do formulário:", { name, email, message }); // ADICIONE ISSO PARA VER SE ESTÁ CHEGANDO NO BACKEND
   const query = "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *";  // Usando placeholders do PostgreSQL
   conexao.query(query, [nome, email], (err, results) => {
     if (err) {
