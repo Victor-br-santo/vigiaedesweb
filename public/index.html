@@ -15,9 +15,11 @@
   const name = document.getElementById("name").value;
   const email = document.getElementById("email").value;
   const message = document.getElementById("message").value;
+  console.log(name);
 
   try {
-    const resposta = await fetch("https://vigiaedesweb.onrender.com/contato", {
+    // const resposta = await fetch("https://vigiaedesweb.onrender.com/contato", {
+      const resposta = await fetch("https://vigiaedesweb.onrender.com/contato", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ name, email, message }),
@@ -242,6 +244,7 @@
     </form>
   </div>
 </section>
+
 <!-- 
    Seção WhatsApp 
 <section id="whatsapp" class="whatsapp">
