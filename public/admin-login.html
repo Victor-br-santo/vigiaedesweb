@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Login / Cadastro ADM</title>
+  <style>
+    body {
+      font-family: sans-serif;
+      background: #f4f4f4;
+      padding: 2rem;
+    }
+    .container {
+      max-width: 400px;
+      margin: auto;
+      background: white;
+      padding: 2rem;
+      border-radius: 8px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    }
+    h2 {
+      text-align: center;
+    }
+    input, button {
+      width: 100%;
+      padding: 10px;
+      margin: 0.5rem 0;
+    }
+    .toggle {
+      text-align: center;
+      margin-top: 1rem;
+    }
+    .success, .error {
+      text-align: center;
+      margin: 1rem 0;
+      font-weight: bold;
+    }
+    .success { color: green; }
+    .error { color: red; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 id="formTitle">Login de Administrador</h2>
+
+    <form id="adminForm">
+      <div id="nomeField" style="display: none;">
+        <input type="text" id="nome" placeholder="Nome completo" />
+      </div>
+      <input type="email" id="email" placeholder="E-mail" required />
+      <input type="password" id="senha" placeholder="Senha" required />
+      <button type="submit" id="submitButton">Entrar</button>
+    </form>
+
+    <div class="success" id="successMessage"></div>
+    <div class="error" id="errorMessage"></div>
+
+    <div class="toggle">
+      <span id="toggleText">Não tem uma conta? <a href="#" id="toggleLink">Cadastre-se</a></span>
+    </div>
+  </div>
+
+  <script>
+    let isLogin = true;
+
+    const formTitle = document.getElementById("formTitle");
+    const nomeField = document.getElementById("nomeField");
+    const submitButton = document.getElementById("submitButton");
+    const toggleLink = document.getElementById("toggleLink");
+    const toggleText = document.getElementById("toggleText");
+    const successMessage = document.getElementById("successMessage");
+    const errorMessage = document.getElementById("errorMessage");
+
+    document.getElementById("adminForm").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      successMessage.textContent = "";
+      errorMessage.textContent = "";
+
+      const nome = document.getElementById("nome").value;
+      const email = document.getElementById("email").value;
+      const senha = document.getElementById("senha").value;
+
+      const url = isLogin ? "/admin/login" : "/admin/registro";
+      const payload = isLogin ? { email, senha } : { nome, email, senha };
+
+      try {
+        const response = await fetch(url, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+          successMessage.textContent = data.mensagem || "Sucesso!";
+          if (isLogin && data.token) {
+            localStorage.setItem("adminToken", data.token);
+            // Redirecionar para dashboard
+            window.location.href = "/dashboard.html";
+          }
+        } else {
+          errorMessage.textContent = data.mensagem || "Erro na requisição";
+        }
+      } catch (err) {
+        errorMessage.textContent = "Erro de conexão com o servidor";
+      }
+    });
+
+    toggleLink.addEventListener("click", (e) => {
+      e.preventDefault();
+      isLogin = !isLogin;
+      formTitle.textContent = isLogin ? "Login de Administrador" : "Cadastro de Administrador";
+      submitButton.textContent = isLogin ? "Entrar" : "Cadastrar";
+      toggleText.innerHTML = isLogin
+        ? 'Não tem uma conta? <a href="#" id="toggleLink">Cadastre-se</a>'
+        : 'Já tem uma conta? <a href="#" id="toggleLink">Entrar</a>';
+      nomeField.style.display = isLogin ? "none" : "block";
+      document.getElementById("nome").value = "";
+
+      // Recoloca o event listener
+      toggleLink.replaceWith(toggleLink.cloneNode(true));
+      document.getElementById("toggleLink").addEventListener("click", toggleLinkClick);
+    });
+
+    const toggleLinkClick = toggleLink.onclick;
+  </script>
+</body>
+</html>

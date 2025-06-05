@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const app = express();
+const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
 const pool = require("./db"); // Agora o db.js é configurado para PostgreSQL
 require('dotenv').config();
 const nodemailer = require("nodemailer");
@@ -91,6 +93,52 @@ const PORT = process.env.PORT || 3000;
 
 app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
+});
+
+app.use(express.static(path.join(__dirname, "public")));
+
+// Rota para registrar novo administrador
+app.post("/admin/registro", async (req, res) => {
+  const { nome, email, senha } = req.body;
+
+  try {
+    const hashedPassword = await bcrypt.hash(senha, 10);
+    const query = "INSERT INTO admins (nome, email, senha) VALUES ($1, $2, $3) RETURNING *";
+    const result = await pool.query(query, [nome, email, hashedPassword]);
+
+    res.status(201).json({ mensagem: "Administrador registrado com sucesso!", admin: result.rows[0] });
+  } catch (err) {
+    console.error("Erro ao registrar admin:", err);
+    res.status(500).json({ mensagem: "Erro ao registrar administrador" });
+  }
+});
+
+// Rota para login de administrador
+app.post("/admin/login", async (req, res) => {
+  const { email, senha } = req.body;
+
+  try {
+    const query = "SELECT * FROM admins WHERE email = $1";
+    const result = await pool.query(query, [email]);
+
+    if (result.rows.length === 0) {
+      return res.status(401).json({ mensagem: "Administrador não encontrado" });
+    }
+
+    const admin = result.rows[0];
+    const senhaValida = await bcrypt.compare(senha, admin.senha);
+
+    if (!senhaValida) {
+      return res.status(401).json({ mensagem: "Senha incorreta" });
+    }
+
+    const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+
+    res.json({ mensagem: "Login bem-sucedido", token });
+  } catch (err) {
+    console.error("Erro no login de admin:", err);
+    res.status(500).json({ mensagem: "Erro no login" });
+  }
 });
 
 
