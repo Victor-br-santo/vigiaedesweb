@@ -29,7 +29,7 @@ pool.query('SELECT NOW()', (err, res) => {
 app.get("/usuarios", (req, res) => {
   const query = "SELECT * FROM usuarios";  // Query para pegar todos os usuários
 
-  conexao.query(query, (err, results) => {  // Usando pool.query() do pg
+  pool.query(query, (err, results) => {  // Usando pool.query() do pg
     if (err) {
       console.error("Erro ao buscar usuários:", err);
       return res.status(500).json({ mensagem: "Erro ao buscar usuários" });
@@ -43,7 +43,7 @@ app.post("/usuarios", (req, res) => {
   const { nome, email } = req.body;
   console.log("📩 Dados recebidos do formulário:", { name, email, message }); // ADICIONE ISSO PARA VER SE ESTÁ CHEGANDO NO BACKEND
   const query = "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *";  // Usando placeholders do PostgreSQL
-  conexao.query(query, [nome, email], (err, results) => {
+  pool.query(query, [nome, email], (err, results) => {
     if (err) {
       console.error("Erro ao inserir usuário:", err);
       return res.status(500).json({ mensagem: "Erro ao adicionar usuário" });
@@ -59,7 +59,7 @@ app.post("/contato", async (req, res) => {
   const query = "INSERT INTO contatos (nome, email, mensagem) VALUES ($1, $2, $3) RETURNING *";
 
   try {
-    const result = await conexao.query(query, [name, email, message]);
+    const result = await pool.query(query, [name, email, message]);
 
     // Envio de e-mail
     const transporter = nodemailer.createTransport({
@@ -88,19 +88,3 @@ app.post("/contato", async (req, res) => {
   }
 });
 
-app.get("/teste-db", async (req, res) => {
-  try {
-    const result = await conexao.query("SELECT NOW()");
-    res.json({ status: "✅ Conectado ao banco!", hora: result.rows[0].now });
-  } catch (err) {
-    console.error("❌ Erro de conexão com o banco:", err);
-    res.status(500).json({ erro: "Erro ao conectar com o banco de dados" });
-  }
-});
-
-
-// Inicializa o servidor
-const PORT = process.env.PORT || 3000;
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
