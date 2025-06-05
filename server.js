@@ -87,4 +87,10 @@ app.post("/contato", async (req, res) => {
     res.status(500).json({ mensagem: "Erro ao enviar mensagem de contato" });
   }
 });
+const PORT = process.env.PORT || 3000;
+
+app.listen(PORT, () => {
+  console.log(`Servidor rodando na porta ${PORT}`);
+});
+
 
