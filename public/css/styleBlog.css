@@ -1,0 +1,263 @@
+/* Reset básico */
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+/* NAV BAR */
+  
+                                     .pagina-interna .navbar {
+                                      background-color: #070b30; /* Azul escuro */
+                                      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+                                      padding: 10px 0; /* Navbar já menor */
+                                      position: fixed;
+                                      width: 100%;
+                                      z-index: 1000;
+                                    }
+                                    
+                                    .pagina-interna .nav-links li a {
+                                      color: white;
+                                    }
+                                    .navbar-container {
+                                      max-width: 1200px;
+                                      margin: 0 auto;
+                                      padding: 0 40px;
+                                      display: flex;
+                                      align-items: center;
+                                      justify-content: space-between;
+                                      gap: 20px;
+                                      height: 80px;
+                                    }
+                                    
+                                    .navbar-brand img {
+                                      height: 100px;
+                                      margin-left: 20px;
+                                    }
+                                    
+                                    .nav-links {
+                                      list-style: none;
+                                      display: flex;
+                                      gap: 20px;
+                                      padding: 20px;
+                                      justify-content: center;
+                                      flex-grow: 1; /* Faz os links crescerem e ocuparem o espaço central */
+                                    }
+                                    
+                                    .nav-links li {
+                                      margin: 0 5px;
+                                    }
+                                    
+                                    .login-area {
+                                      flex-shrink: 0; /* Impede o botão de encolher */
+                                      margin-left: auto;
+                                    }
+
+
+/* NAVBAR COM MENU HAMBÚRGUER */
+.navbar {
+  top: 0;
+  left: 0;
+  width: 100%;
+  background-color: rgb(255, 255, 255);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.navbar-container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 20px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  height: 70px;
+}
+
+.navbar-brand img {
+  height: 60px;
+  margin-left: 20px;
+}
+
+.nav-links {
+  display: flex;
+  gap: 20px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+}
+
+.nav-links li a {
+  text-decoration: none;
+  color: #000;
+  font-weight: bold;
+  transition: color 0.2s;
+}
+
+.nav-links li a:hover {
+  color: #ff0000;
+}
+
+.login-area {
+  margin-left: 20px;
+}
+
+.btn-login {
+  background-color: #585858;
+  color: white;
+  border: none;
+  padding: 10px 30px;
+  border-radius: 6px;
+  font-size: 15px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.btn-login:hover {
+  background-color: #b30000;
+}
+
+body {
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: #f9f9f9;
+  color: #222;
+  min-height: 100vh;
+}
+
+/* Navbar simples */
+.navbar {
+  background-color: #004080;
+  padding: 1rem;
+  color: white;
+  font-weight: 700;
+  font-size: 1.2rem;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 1.5rem auto 3rem;
+  padding: 0 1rem;
+}
+
+.blog-title {
+  font-size: 3rem;
+  text-align: center;
+  margin-bottom: 1rem;
+}
+
+#searchInput {
+  display: block;
+  margin: 0 auto 2rem;
+  width: 90%;
+  max-width: 600px;
+  padding: 0.75rem 1rem;
+  font-size: 1.1rem;
+  border-radius: 25px;
+  border: 1.5px solid #ccc;
+  transition: border-color 0.3s ease;
+}
+
+#searchInput:focus {
+  outline: none;
+  border-color: #004080;
+}
+
+/* Grid dos posts */
+.posts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 1.5rem;
+  justify-items: center;
+}
+
+/* Card de postagem */
+.post-card {
+  width: 300px;
+  background: white;
+  border-radius: 8px;
+  overflow: hidden;
+  box-shadow: 0 2px 8px rgb(0 0 0 / 0.1);
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.post-card:hover {
+  transform: translateY(-6px);
+}
+
+/* Imagem do post: metade do card */
+.post-image {
+  width: 100%;
+  height: 160px;
+  background-size: cover;
+  background-position: center;
+  border-bottom: 1px solid #ddd;
+}
+
+/* Conteúdo do post: metade do card */
+.post-content {
+  padding: 1rem 1.2rem 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.post-date {
+  color: #777;
+  font-size: 0.85rem;
+  margin-bottom: 0.4rem;
+}
+
+.post-content h3 {
+  font-size: 1.3rem;
+  margin-bottom: 0.6rem;
+  color: #004080;
+}
+
+.post-content p {
+  flex-grow: 1;
+  font-size: 1rem;
+  line-height: 1.3;
+  color: #444;
+  margin-bottom: 1rem;
+}
+
+/* Botão saiba mais */
+.btn-saiba-mais {
+  background-color: #004080;
+  color: white;
+  border: none;
+  padding: 0.6rem 1rem;
+  font-size: 1.05rem;
+  border-radius: 20px;
+  cursor: pointer;
+  align-self: center;
+  transition: background-color 0.3s ease;
+  width: 50%;
+}
+
+.btn-saiba-mais:hover {
+  background-color: #0066cc;
+}
+
+/* Responsividade */
+@media (max-width: 960px) {
+  .posts-grid {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+  }
+}
+
+@media (max-width: 600px) {
+  .posts-grid {
+    grid-template-columns: 1fr;
+    width: 90%;
+    margin: 0 auto;
+  }
+
+  #searchInput {
+    width: 100%;
+  }
+}
