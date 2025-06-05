@@ -40,10 +40,10 @@ app.get("/usuarios", (req, res) => {
 
 // Rota POST para adicionar usuário ao banco
 app.post("/usuarios", (req, res) => {
-  const { nome, email } = req.body;
-  console.log("📩 Dados recebidos do formulário:", { name, email, message }); // ADICIONE ISSO PARA VER SE ESTÁ CHEGANDO NO BACKEND
+  const { nome, email, message } = req.body;
+  console.log("📩 Dados recebidos do formulário:", { nome, email, message}); // ADICIONE ISSO PARA VER SE ESTÁ CHEGANDO NO BACKEND
   const query = "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *";  // Usando placeholders do PostgreSQL
-  pool.query(query, [nome, email], (err, results) => {
+  pool.query(query, [nome, email, message], (err, results) => {
     if (err) {
       console.error("Erro ao inserir usuário:", err);
       return res.status(500).json({ mensagem: "Erro ao adicionar usuário" });
@@ -54,12 +54,12 @@ app.post("/usuarios", (req, res) => {
 });
 
 app.post("/contato", async (req, res) => {
-  const { name, email, message } = req.body;
+  const { nome, email, message} = req.body;
 
   const query = "INSERT INTO contatos (nome, email, mensagem) VALUES ($1, $2, $3) RETURNING *";
 
   try {
-    const result = await pool.query(query, [name, email, message]);
+    const result = await pool.query(query, [nome, email, message]);
 
     // Envio de e-mail
     const transporter = nodemailer.createTransport({
@@ -74,7 +74,7 @@ app.post("/contato", async (req, res) => {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_TO,
       subject: "Nova mensagem de contato",
-      text: `Nome: ${name}\nEmail: ${email}\nMensagem:\n${message}`
+      text: `Nome: ${nome}\nEmail: ${email}\nMensagem:\n${message}`
     });
 
     res.status(201).json({
