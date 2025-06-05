@@ -54,7 +54,7 @@ app.post("/usuarios", (req, res) => {
 });
 
 app.post("/contato", async (req, res) => {
-  const { nome, email} = req.body;
+   const result = await pool.query(query, [nome, email, message]);
 
   const query = "INSERT INTO contatos (nome, email, mensagem) VALUES ($1, $2, $3) RETURNING *";
 
