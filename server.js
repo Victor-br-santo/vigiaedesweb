@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const app = express();
-const bcrypt = require("bcrypt");
+const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const pool = require("./db"); // Agora o db.js é configurado para PostgreSQL
 require('dotenv').config();
