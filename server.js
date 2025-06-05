@@ -54,12 +54,12 @@ app.post("/usuarios", (req, res) => {
 });
 
 app.post("/contato", async (req, res) => {
-   const result = await pool.query(query, [nome, email, message]);
+  const { name, email, message } = req.body;
 
   const query = "INSERT INTO contatos (nome, email, mensagem) VALUES ($1, $2, $3) RETURNING *";
 
   try {
-    const result = await pool.query(query, [nome, email]);
+    const result = await pool.query(query, [name, email]);
 
     // Envio de e-mail
     const transporter = nodemailer.createTransport({
@@ -74,7 +74,7 @@ app.post("/contato", async (req, res) => {
       from: process.env.EMAIL_USER,
       to: process.env.EMAIL_TO,
       subject: "Nova mensagem de contato",
-      text: `Nome: ${nome}\nEmail: ${email}\nMensagem:\n${message}`
+      text: `Nome: ${name}\nEmail: ${email}\nMensagem:\n${message}`
     });
 
     res.status(201).json({
