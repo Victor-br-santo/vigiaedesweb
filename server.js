@@ -59,7 +59,7 @@ app.post("/contato", async (req, res) => {
   const query = "INSERT INTO contatos (nome, email, mensagem) VALUES ($1, $2, $3) RETURNING *";
 
   try {
-    const result = await pool.query(query, [name, email]);
+    const result = await pool.query(query, [name, email, message]);
 
     // Envio de e-mail
     const transporter = nodemailer.createTransport({
