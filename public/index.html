@@ -8,38 +8,6 @@
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
   <link rel="icon" href="img/sla  (Apresentação) (1).svg" type="image/png">
   <link href="https://fonts.googleapis.com/css2?family=Arimo:wght@400;700&family=Bai+Jamjuree:wght@400;600;700&display=swap" rel="stylesheet">
-  <script>
-    document.querySelector("form").addEventListener("submit", async function (e) {
-  e.preventDefault();
-
-  const name = document.getElementById("name").value;
-  const email = document.getElementById("email").value;
-  const message = document.getElementById("message").value;
-  console.log(name);
-
-  try {
-    // const resposta = await fetch("https://vigiaedesweb.onrender.com/contato", {
-      const resposta = await fetch("https://vigiaedesweb.onrender.com/contato", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ name, email, message }),
-    });
-
-    const dados = await resposta.json();
-
-    if (resposta.ok) {
-      alert(dados.mensagem);
-    } else {
-      alert("Erro ao enviar: " + dados.mensagem);
-    }
-
-  } catch (erro) {
-    alert("Erro ao conectar com o servidor.");
-    console.error(erro);
-  }
-});
-  </script>
-  
 </head>
 <body>
  
@@ -306,6 +274,37 @@
     </div>
   </footer>
   
+  <script>
+    document.querySelector("form").addEventListener("submit", async function (e) {
+  e.preventDefault();
+
+  const name = document.getElementById("name").value;
+  const email = document.getElementById("email").value;
+  const message = document.getElementById("message").value;
+  console.log(name);
+
+  try {
+    // const resposta = await fetch("https://vigiaedesweb.onrender.com/contato", {
+      const resposta = await fetch("https://vigiaedesweb.onrender.com/contato", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ name, email, message }),
+    });
+
+    const dados = await resposta.json();
+
+    if (resposta.ok) {
+      alert(dados.mensagem);
+    } else {
+      alert("Erro ao enviar: " + dados.mensagem);
+    }
+
+  } catch (erro) {
+    alert("Erro ao conectar com o servidor.");
+    console.error(erro);
+  }
+});
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
