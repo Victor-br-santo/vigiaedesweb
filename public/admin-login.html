@@ -93,13 +93,18 @@
         const data = await response.json();
 
         if (response.ok) {
-          successMessage.textContent = data.mensagem || "Sucesso!";
-          if (isLogin && data.token) {
-            localStorage.setItem("adminToken", data.token);
-            // Redirecionar para dashboard
-            window.location.href = "/dashboard.html";
-          }
-        } else {
+  successMessage.textContent = data.mensagem || "Sucesso!";
+  if (isLogin && data.token) {
+    localStorage.setItem("adminToken", data.token);
+    window.location.href = "/dashboard.html";
+  } else if (!isLogin) {
+    // Cadastro bem-sucedido: volta para login
+    setTimeout(() => {
+      isLogin = true;
+      toggleFormMode(); // Função para alternar visualmente
+    }, 1000);
+  }
+}else {
           errorMessage.textContent = data.mensagem || "Erro na requisição";
         }
       } catch (err) {
@@ -107,21 +112,32 @@
       }
     });
 
-    toggleLink.addEventListener("click", (e) => {
+    function toggleFormMode() {
+  formTitle.textContent = isLogin ? "Login de Administrador" : "Cadastro de Administrador";
+  submitButton.textContent = isLogin ? "Entrar" : "Cadastrar";
+  toggleText.innerHTML = isLogin
+    ? 'Não tem uma conta? <a href="#" id="toggleLink">Cadastre-se</a>'
+    : 'Já tem uma conta? <a href="#" id="toggleLink">Entrar</a>';
+  nomeField.style.display = isLogin ? "none" : "block";
+  document.getElementById("nome").value = "";
+
+  // Recoloca listener no novo link
+  setTimeout(() => {
+    document.getElementById("toggleLink").addEventListener("click", (e) => {
       e.preventDefault();
       isLogin = !isLogin;
-      formTitle.textContent = isLogin ? "Login de Administrador" : "Cadastro de Administrador";
-      submitButton.textContent = isLogin ? "Entrar" : "Cadastrar";
-      toggleText.innerHTML = isLogin
-        ? 'Não tem uma conta? <a href="#" id="toggleLink">Cadastre-se</a>'
-        : 'Já tem uma conta? <a href="#" id="toggleLink">Entrar</a>';
-      nomeField.style.display = isLogin ? "none" : "block";
-      document.getElementById("nome").value = "";
-
-      // Recoloca o event listener
-      toggleLink.replaceWith(toggleLink.cloneNode(true));
-      document.getElementById("toggleLink").addEventListener("click", toggleLinkClick);
+      toggleFormMode();
     });
+  }, 0);
+}
+
+// Listener inicial
+document.getElementById("toggleLink").addEventListener("click", (e) => {
+  e.preventDefault();
+  isLogin = !isLogin;
+  toggleFormMode();
+});
+
 
     const toggleLinkClick = toggleLink.onclick;
   </script>
