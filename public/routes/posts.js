@@ -2,17 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const pool = require("../../db");
-const multer = require("multer");
-const path = require("path");
 const upload = require("../../middlewares/upload");
-
-
-// Configurar o multer
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "public/uploads"),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
-});
-const upload = multer({ storage });
 
 // POST - Criar novo post
 router.post("/posts", upload.single("imagem"), async (req, res) => {
