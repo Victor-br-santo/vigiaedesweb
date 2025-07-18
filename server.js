@@ -3,7 +3,6 @@ const cors = require("cors");
 const path = require("path");
 const app = express();
 const router = express.Router();
-const postRoutes = require("./public/routes/posts");
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 const bcrypt = require("bcryptjs");
@@ -166,3 +165,15 @@ app.get("/dashboard", autenticarToken, (req, res) => {
   res.render("dashboard", { admin: req.admin });
 });
 
+
+const multer = require("multer");
+const path = require("path");
+
+// Configurar destino e nome do arquivo
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => cb(null, "public/uploads"),
+  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
+});
+const upload = multer({ storage });
+
+const postRoutes = require("./public/routes/posts");
