@@ -1,17 +1,45 @@
-<!-- dashboard.html -->
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Admin</title>
-  <link rel="stylesheet" href="style.css">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - VigiaAedes</title>
+  <link rel="stylesheet" href="css/Dashstyle.css" />
 </head>
 <body>
   <div class="dashboard-container">
-    <h1>Painel do Administrador</h1>
-    <p>Bem-vindo, administrador!</p>
-    <!-- Aqui vão opções como Gerenciar Posts, Ver E-mails, etc. -->
+    <aside class="sidebar">
+      <h2>VigiaAedes</h2>
+      <nav>
+        <ul>
+          <li><a href="#">Início</a></li>
+          <li><a href="#">Posts</a></li>
+          <li><a href="#">Mensagens</a></li>
+          <li><a href="#">Sair</a></li>
+        </ul>
+      </nav>
+    </aside>
+
+    <main class="main-content">
+      <header>
+        <h1>Bem-vindo, Administrador</h1>
+      </header>
+
+      <section class="cards">
+        <div class="card">
+          <h3>Posts Publicados</h3>
+          <p>12</p>
+        </div>
+        <div class="card">
+          <h3>Mensagens Recebidas</h3>
+          <p>8</p>
+        </div>
+        <div class="card">
+          <h3>Admins Ativos</h3>
+          <p>2</p>
+        </div>
+      </section>
+    </main>
   </div>
 </body>
 </html>

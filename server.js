@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const app = express();
+app.set('view engine', 'ejs');
+app.set('views', path.join(__dirname, 'views'));
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const pool = require("./db"); // Agora o db.js é configurado para PostgreSQL
@@ -140,5 +142,24 @@ app.post("/admin/login", async (req, res) => {
     res.status(500).json({ mensagem: "Erro no login" });
   }
 });
+// Middleware simples para verificar token JWT
+function autenticarToken(req, res, next) {
+  const token = req.headers.authorization?.split(' ')[1]; // Espera: Authorization: Bearer <token>
+
+  if (!token) return res.status(401).send('Token não fornecido');
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) return res.status(403).send('Token inválido');
+
+    req.admin = decoded; // Aqui você pode acessar req.admin.id, etc
+    next();
+  });
+}
+
+// Rota protegida para o dashboard
+app.get("/dashboard", autenticarToken, (req, res) => {
+  res.render("dashboard", { admin: req.admin });
+});
+
 
 
