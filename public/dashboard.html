@@ -26,15 +26,13 @@
 </div>
 
 <!-- Gerenciar posts -->
-<div id="aba-posts" class="aba" style="display: none">
-  <section class="criar-post">
-    <h2>Novo Post</h2>
-    <form id="form-novo-post">
-      <input type="text" id="titulo" placeholder="Título do post" required />
-      <textarea id="conteudo" placeholder="Conteúdo do post" required></textarea>
-      <button type="submit">Publicar</button>
-    </form>
-  </section>
+<form id="form-novo-post" enctype="multipart/form-data">
+  <input type="text" id="titulo" name="titulo" placeholder="Título do post" required />
+  <textarea id="conteudo" name="conteudo" placeholder="Conteúdo do post" required></textarea>
+  <input type="file" id="imagem" name="imagem" accept="image/*" />
+  <button type="submit">Publicar</button>
+</form>
+
 
   <section class="posts">
     <h2>Posts Recentes</h2>
@@ -73,29 +71,37 @@
 
   
   async function carregarPosts() {
-    try {
-      const resposta = await fetch("/posts");
-      const posts = await resposta.json();
+  try {
+    const resposta = await fetch("/posts");
+    const posts = await resposta.json();
 
-      const container = document.getElementById("posts-container");
-      container.innerHTML = "";
+    const container = document.getElementById("posts-container");
+    container.innerHTML = "";
 
-      posts.forEach(post => {
-        const card = document.createElement("div");
-        card.className = "post-card";
-        card.innerHTML = `
+    posts.forEach(post => {
+      const card = document.createElement("div");
+      card.className = "post-card";
+
+      card.innerHTML = `
+        <img src="${post.imagem_url || 'https://via.placeholder.com/300x150'}" alt="Imagem do post" class="post-imagem" />
+        <div class="post-conteudo">
           <h3>${post.titulo}</h3>
           <p>${post.conteudo}</p>
-        `;
-        container.appendChild(card);
-      });
+          <button class="saiba-mais">Saiba mais</button>
+        </div>
+      `;
 
-    } catch (erro) {
-      console.error("Erro ao carregar posts:", erro);
-    }
+      container.appendChild(card);
+    });
+
+  } catch (erro) {
+    console.error("Erro ao carregar posts:", erro);
   }
+}
 
-  carregarPosts();
+carregarPosts();
+
+
 </script>
 
 </body>

@@ -11,6 +11,8 @@ const jwt = require("jsonwebtoken");
 const pool = require("./db"); // Agora o db.js é configurado para PostgreSQL
 require('dotenv').config();
 const nodemailer = require("nodemailer");
+app.use("/uploads", express.static("public/uploads"));
+
 
 const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
