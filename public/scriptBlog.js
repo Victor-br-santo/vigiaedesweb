@@ -31,4 +31,28 @@ postsGrid.addEventListener('click', e => {
   }
 });
 
+async function carregarPosts() {
+    try {
+      const resposta = await fetch("/posts");
+      const posts = await resposta.json();
+
+      const container = document.getElementById("posts-container");
+      container.innerHTML = "";
+
+      posts.forEach(post => {
+        const card = document.createElement("div");
+        card.className = "post-card";
+        card.innerHTML = `
+          <h3>${post.titulo}</h3>
+          <p>${post.conteudo}</p>
+        `;
+        container.appendChild(card);
+      });
+
+    } catch (erro) {
+      console.error("Erro ao carregar posts:", erro);
+    }
+  }
+
+  carregarPosts();
 

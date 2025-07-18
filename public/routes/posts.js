@@ -2,6 +2,24 @@ const express = require("express");
 const router = express.Router();
 const pool = require("../../db"); // ajuste conforme seu caminho real
 
+router.post("/posts", async (req, res) => {
+  const { titulo, conteudo } = req.body;
+  if (!titulo || !conteudo) {
+    return res.status(400).json({ erro: "Título e conteúdo são obrigatórios" });
+  }
+  try {
+    const result = await pool.query(
+      "INSERT INTO posts (titulo, conteudo) VALUES ($1, $2) RETURNING *",
+      [titulo, conteudo]
+    );
+    res.status(201).json(result.rows[0]);
+  } catch (err) {
+    console.error("Erro ao criar post:", err);
+    res.status(500).json({ erro: "Erro ao criar post" });
+  }
+});
+
+
 // GET - Listar todos os posts
 router.get("/posts", async (req, res) => {
   try {
