@@ -3,7 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const app = express();
 const router = express.Router();
-const postRoutes = require("./routes/posts");
+const postRoutes = require("./public/routes/posts");
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 const bcrypt = require("bcryptjs");
