@@ -4,6 +4,8 @@ const router = express.Router();
 const pool = require("../../db");
 const multer = require("multer");
 const path = require("path");
+const upload = require("../../middlewares/upload");
+
 
 // Configurar o multer
 const storage = multer.diskStorage({

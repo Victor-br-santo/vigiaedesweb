@@ -9,6 +9,7 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const pool = require("./db"); // Agora o db.js é configurado para PostgreSQL
 require('dotenv').config();
+const postRoutes = require("./public/routes/posts"); // 🔥 Faltando!
 const nodemailer = require("nodemailer");
 app.use("/uploads", express.static("public/uploads"));
 
@@ -101,7 +102,6 @@ app.listen(PORT, () => {
   console.log(`Servidor rodando na porta ${PORT}`);
 });
 
-app.use(express.static(path.join(__dirname, "public")));
 
 // Rota para registrar novo administrador
 app.post("/admin/registro", async (req, res) => {
