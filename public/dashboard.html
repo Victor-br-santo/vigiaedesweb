@@ -99,8 +99,39 @@
   }
 }
 
-carregarPosts();
 
+
+const form = document.getElementById("form-novo-post");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append("titulo", document.getElementById("titulo").value.trim());
+  formData.append("conteudo", document.getElementById("conteudo").value.trim());
+  const imagemInput = document.getElementById("imagem");
+  if (imagemInput.files[0]) {
+    formData.append("imagem", imagemInput.files[0]);
+  }
+
+  try {
+    const resposta = await fetch("/posts", {
+      method: "POST",
+      body: formData
+    });
+
+    if (resposta.ok) {
+      form.reset();
+      carregarPosts();
+    } else {
+      const erro = await resposta.json();
+      alert("Erro ao criar post: " + (erro.erro || "Erro desconhecido"));
+    }
+  } catch (err) {
+    console.error("Erro ao enviar post:", err);
+    alert("Erro na conexão com o servidor.");
+  }
+});
 
 </script>
 

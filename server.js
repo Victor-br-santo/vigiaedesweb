@@ -166,14 +166,4 @@ app.get("/dashboard", autenticarToken, (req, res) => {
 });
 
 
-const multer = require("multer");
-const path = require("path");
 
-// Configurar destino e nome do arquivo
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, "public/uploads"),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
-});
-const upload = multer({ storage });
-
-const postRoutes = require("./public/routes/posts");
