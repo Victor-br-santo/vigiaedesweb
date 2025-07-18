@@ -87,3 +87,38 @@ header h1 {
   font-weight: bold;
   color: #2980b9;
 }
+
+/*CRIAR POSTS*/
+
+.criar-post {
+  margin-bottom: 30px;
+}
+
+.criar-post form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 600px;
+}
+
+.criar-post input,
+.criar-post textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.criar-post button {
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.criar-post button:hover {
+  background-color: #21618c;
+}
