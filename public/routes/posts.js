@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const pool = require("../db"); // ajuste conforme seu caminho real
+const pool = require("../../db"); // ajuste conforme seu caminho real
 
 // GET - Listar todos os posts
 router.get("/posts", async (req, res) => {
