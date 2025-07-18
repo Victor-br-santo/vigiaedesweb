@@ -47,6 +47,7 @@
   <h2>Mensagens recebidas</h2>
   <p>(Em breve...)</p>
 </div>
+
 <script>
   function mostrarAba(aba) {
     const abas = document.querySelectorAll(".aba");
@@ -69,6 +70,32 @@
   document.addEventListener("DOMContentLoaded", () => {
     mostrarAba("posts"); // Carrega 'Gerenciar posts' por padrão
   });
+
+  
+  async function carregarPosts() {
+    try {
+      const resposta = await fetch("/posts");
+      const posts = await resposta.json();
+
+      const container = document.getElementById("posts-container");
+      container.innerHTML = "";
+
+      posts.forEach(post => {
+        const card = document.createElement("div");
+        card.className = "post-card";
+        card.innerHTML = `
+          <h3>${post.titulo}</h3>
+          <p>${post.conteudo}</p>
+        `;
+        container.appendChild(card);
+      });
+
+    } catch (erro) {
+      console.error("Erro ao carregar posts:", erro);
+    }
+  }
+
+  carregarPosts();
 </script>
 
 </body>
