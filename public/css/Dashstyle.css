@@ -9,6 +9,14 @@ body {
   background: #f4f4f4;
 }
 
+.sidebar a.ativo {
+  background-color: #1abc9c;
+  color: white;
+  padding: 8px;
+  border-radius: 6px;
+  display: block;
+}
+
 .dashboard-container {
   display: flex;
   height: 100vh;

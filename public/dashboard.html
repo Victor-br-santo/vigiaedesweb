@@ -12,34 +12,64 @@
       <h2>VigiaAedes</h2>
       <nav>
         <ul>
-          <li><a href="#">Início</a></li>
-          <li><a href="#">Gerenciar posts</a></li>
-          <li><a href="#">Mensagens</a></li>
-          <li><a href="#">Sair</a></li>
-        </ul>
+         <li><a href="#" onclick="mostrarAba('inicio')" id="link-inicio">Início</a></li>
+         <li><a href="#" onclick="mostrarAba('posts')" id="link-posts">Gerenciar posts</a></li>
+         <li><a href="#" onclick="mostrarAba('mensagens')" id="link-mensagens">Mensagens</a></li>
+         <li><a href="#">Sair</a></li>
+      </ul>
+
       </nav>
     </aside>
+   <!-- Início -->
+<div id="aba-inicio" class="aba">
+  <h1>Bem-vindo, Administrador</h1>
+</div>
 
-    <main class="main-content">
-      <header>
-        <h1>Bem-vindo, Administrador</h1>
-      </header>
+<!-- Gerenciar posts -->
+<div id="aba-posts" class="aba" style="display: none">
+  <section class="criar-post">
+    <h2>Novo Post</h2>
+    <form id="form-novo-post">
+      <input type="text" id="titulo" placeholder="Título do post" required />
+      <textarea id="conteudo" placeholder="Conteúdo do post" required></textarea>
+      <button type="submit">Publicar</button>
+    </form>
+  </section>
 
-      <section class="cards">
-        <div class="card">
-          <h3>Posts Publicados</h3>
-          <p>12</p>
-        </div>
-        <div class="card">
-          <h3>Mensagens Recebidas</h3>
-          <p>8</p>
-        </div>
-        <div class="card">
-          <h3>Admins Ativos</h3>
-          <p>2</p>
-        </div>
-      </section>
-    </main>
-  </div>
+  <section class="posts">
+    <h2>Posts Recentes</h2>
+    <div id="posts-container" class="cards"></div>
+  </section>
+</div>
+
+<!-- Mensagens -->
+<div id="aba-mensagens" class="aba" style="display: none">
+  <h2>Mensagens recebidas</h2>
+  <p>(Em breve...)</p>
+</div>
+<script>
+  function mostrarAba(aba) {
+    const abas = document.querySelectorAll(".aba");
+    abas.forEach(div => div.style.display = "none");
+
+    document.getElementById(`aba-${aba}`).style.display = "block";
+
+    // Atualizar menu ativo
+    const links = document.querySelectorAll("aside a");
+    links.forEach(link => link.classList.remove("ativo"));
+    document.getElementById(`link-${aba}`).classList.add("ativo");
+
+    // Atualizar conteúdos se necessário
+    if (aba === "posts") {
+      carregarPosts();
+    }
+  }
+
+  // Marcar como ativo
+  document.addEventListener("DOMContentLoaded", () => {
+    mostrarAba("posts"); // Carrega 'Gerenciar posts' por padrão
+  });
+</script>
+
 </body>
 </html>
