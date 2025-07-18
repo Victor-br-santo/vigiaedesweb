@@ -31,79 +31,10 @@
     </nav>
   </header>
 
-  <main class="container">
-    <h2 class="blog-title">Blog</h2>
-
-    <input
-      type="search"
-      id="searchInput"
-      placeholder="Pesquisar postagens..."
-      autocomplete="off"
-    />
-
-    <section id="postsGrid" class="posts-grid">
-      <!-- Cards vão aqui via HTML fixo -->
-      <article class="post-card" data-title="Viagem ao interior" data-date="2025-05-10">
-        <div class="post-image" style="background-image:url('https://picsum.photos/id/1018/400/200')"></div>
-        <div class="post-content">
-          <p class="post-date">10/05/2025</p>
-          <h3>Viagem ao interior</h3>
-          <p>Conheça as belezas do campo e dicas para aproveitar sua viagem.</p>
-          <button class="btn-saiba-mais">Saiba mais</button>
-        </div>
-      </article>
-
-      <article class="post-card" data-title="Dicas para economizar combustível" data-date="2025-05-15">
-        <div class="post-image" style="background-image:url('https://picsum.photos/id/1025/400/200')"></div>
-        <div class="post-content">
-          <p class="post-date">15/05/2025</p>
-          <h3>Dicas para economizar combustível</h3>
-          <p>Aprenda a dirigir de forma eficiente para gastar menos gasolina.</p>
-          <button class="btn-saiba-mais">Saiba mais</button>
-        </div>
-      </article>
-
-      <article class="post-card" data-title="Manutenção preventiva" data-date="2025-05-20">
-        <div class="post-image" style="background-image:url('https://picsum.photos/id/1031/400/200')"></div>
-        <div class="post-content">
-          <p class="post-date">20/05/2025</p>
-          <h3>Manutenção preventiva</h3>
-          <p>Saiba como evitar problemas mecânicos com cuidados simples.</p>
-          <button class="btn-saiba-mais">Saiba mais</button>
-        </div>
-      </article>
-
-      <article class="post-card" data-title="Roteiro turístico urbano" data-date="2025-06-01">
-        <div class="post-image" style="background-image:url('https://picsum.photos/id/1043/400/200')"></div>
-        <div class="post-content">
-          <p class="post-date">01/06/2025</p>
-          <h3>Roteiro turístico urbano</h3>
-          <p>Descubra os pontos mais interessantes da cidade para visitar.</p>
-          <button class="btn-saiba-mais">Saiba mais</button>
-        </div>
-      </article>
-
-      <article class="post-card" data-title="Cuidados no inverno" data-date="2025-06-10">
-        <div class="post-image" style="background-image:url('https://picsum.photos/id/1067/400/200')"></div>
-        <div class="post-content">
-          <p class="post-date">10/06/2025</p>
-          <h3>Cuidados no inverno</h3>
-          <p>Como preparar seu carro para enfrentar baixas temperaturas.</p>
-          <button class="btn-saiba-mais">Saiba mais</button>
-        </div>
-      </article>
-
-      <article class="post-card" data-title="Tecnologia automotiva" data-date="2025-06-15">
-        <div class="post-image" style="background-image:url('https://picsum.photos/id/1074/400/200')"></div>
-        <div class="post-content">
-          <p class="post-date">15/06/2025</p>
-          <h3>Tecnologia automotiva</h3>
-          <p>Novidades e tendências do mercado de automóveis.</p>
-          <button class="btn-saiba-mais">Saiba mais</button>
-        </div>
-      </article>
-    </section>
-  </main>
+   <section class="posts">
+      <h2>Blog</h2>
+      <div id="posts-container" class="posts-grid"></div>
+   </section>
 
   <script src="scriptBlog.js"></script>
 </body>

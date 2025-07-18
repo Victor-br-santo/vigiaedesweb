@@ -2,6 +2,8 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const app = express();
+const router = express.Router();
+const postRoutes = require("./routes/posts");
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 const bcrypt = require("bcryptjs");
@@ -16,6 +18,7 @@ const emailTo = process.env.EMAIL_TO;
 
 app.use(cors());
 app.use(express.json());
+app.use(postRoutes);
 
 
 app.use(express.static(path.join(__dirname, "public")));
@@ -162,4 +165,27 @@ app.get("/dashboard", autenticarToken, (req, res) => {
 });
 
 
+// Listar todos os posts
+router.get("/posts", async (req, res) => {
+  try {
+    const result = await pool.query("SELECT * FROM posts ORDER BY id DESC");
+    res.json(result.rows);
+  } catch (err) {
+    console.error("Erro ao buscar posts:", err);
+    res.status(500).json({ erro: "Erro interno do servidor" });
+  }
+});
 
+module.exports = router;
+
+// Deletar um post por ID
+router.delete("/posts/:id", async (req, res) => {
+  const { id } = req.params;
+  try {
+    await pool.query("DELETE FROM posts WHERE id = $1", [id]);
+    res.status(204).send(); // No Content
+  } catch (err) {
+    console.error("Erro ao excluir post:", err);
+    res.status(500).json({ erro: "Erro ao excluir post" });
+  }
+});
