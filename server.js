@@ -12,7 +12,12 @@ require('dotenv').config();
 const postRoutes = require("./public/routes/posts"); // 🔥 Faltando!
 const nodemailer = require("nodemailer");
 app.use("/uploads", express.static("public/uploads"));
+const fs = require("fs");
 
+const uploadDir = path.join(__dirname, "public/uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
 
 const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
