@@ -86,7 +86,7 @@
       card.className = "post-card";
 
       card.innerHTML = `
-        <img src="${post.imagem_url || 'https://via.placeholder.com/300x150'}" alt="Imagem do post" class="post-imagem" />
+        <img src="${post.imagem || 'https://via.placeholder.com/300x150'}" alt="Imagem do post" class="post-imagem" />
         <div class="post-conteudo">
           <h3>${post.titulo}</h3>
           <p>${post.conteudo}</p>
