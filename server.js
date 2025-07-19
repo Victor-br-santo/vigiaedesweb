@@ -27,7 +27,6 @@ app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
 app.use(postRoutes);
-const path = require("path");
 app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
 
 
