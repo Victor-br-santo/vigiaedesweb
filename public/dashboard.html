@@ -29,7 +29,7 @@
   
 <!-- Gerenciar posts -->
  <div class="criar-post">
-<form id="form-novo-post" enctype="multipart/form-data">
+<form id="form-novo-post" action="/posts" method="POST" enctype="multipart/form-data">
   <input type="text" id="titulo" name="titulo" placeholder="Título do post" required />
   <textarea id="conteudo" name="conteudo" placeholder="Conteúdo do post" required></textarea>
   <input type="file" id="imagem" name="imagem" accept="image/*" />
