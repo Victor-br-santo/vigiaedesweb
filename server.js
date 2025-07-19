@@ -1,18 +1,21 @@
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
+const fs = require("fs");
+
 const app = express();
 const router = express.Router();
+
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
-const pool = require("./db"); // Agora o db.js é configurado para PostgreSQL
+const pool = require("./db");
 require('dotenv').config();
-const postRoutes = require("./public/routes/posts"); // 🔥 Faltando!
+
+const postRoutes = require("./public/routes/posts");
 const nodemailer = require("nodemailer");
-app.use("/uploads", express.static("public/uploads"));
-const fs = require("fs");
 
 const uploadDir = path.join(__dirname, "public/uploads");
 if (!fs.existsSync(uploadDir)) {
@@ -23,14 +26,13 @@ const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
 const emailTo = process.env.EMAIL_TO;
 
-app.use(express.static("public"));
 app.use(cors());
 app.use(express.json());
+
+app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
+app.use(express.static(path.join(__dirname, 'public')));
+
 app.use(postRoutes);
-app.use("/uploads", express.static(path.join(__dirname, "public/uploads")));
-
-
-app.use(express.static(path.join(__dirname, "public")));
 
 // Testar a conexão com o banco logo após configurar o pool
 pool.query('SELECT NOW()', (err, res) => {
