@@ -87,3 +87,73 @@ header h1 {
   font-weight: bold;
   color: #2980b9;
 }
+
+/*CRIAR POSTS*/
+
+.criar-post {
+  margin-bottom: 30px;
+}
+
+.criar-post form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 600px;
+}
+
+.criar-post input,
+.criar-post textarea {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 16px;
+}
+
+.criar-post button {
+  background-color: #2980b9;
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.criar-post button:hover {
+  background-color: #21618c;
+}
+
+/* ALTERAR QUANDO POSSIVEL*/
+
+.post-card {
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  overflow: hidden;
+  margin: 20px 0;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  max-width: 400px;
+}
+
+.post-imagem {
+  width: 100%;
+  height: auto;
+}
+
+.post-conteudo {
+  padding: 15px;
+}
+
+.post-conteudo h3 {
+  margin-top: 0;
+}
+
+.saiba-mais {
+  background: #007bff;
+  color: white;
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  margin-top: 10px;
+  border-radius: 5px;
+}
+
