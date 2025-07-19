@@ -4,8 +4,9 @@ const router = express.Router();
 const pool = require("../../db");
 const upload = require("../../middlewares/upload");
 
-// POST - Criar novo post
+// POST - Criar novo post   
 router.post("/posts", upload.single("imagem"), async (req, res) => {
+  console.log("Arquivo recebido pelo multer:", req.file);
   const { titulo, conteudo } = req.body;
   const imagem = req.file ? "/uploads/" + req.file.filename : null;
 
