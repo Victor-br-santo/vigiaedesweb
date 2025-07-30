@@ -1,4 +1,4 @@
-/* style2.css */
+
 /* style2.css - REVISADO PARA RESPONSIVIDADE GERAL */
 
 body {
@@ -92,36 +92,6 @@ html {
   margin-left: 20px;
 }
 
-@media (max-width: 768px) {
-  .navbar-container {
-    flex-direction: row;
-    justify-content: space-between;
-  }
-
-  .nav-links {
-    position: absolute;
-    top: 70px;
-    right: 0;
-    background-color: white;
-    flex-direction: column;
-    width: 100%;
-    display: none;
-    border-top: 1px solid #ccc;
-  }
-
-  .nav-links.active {
-    display: flex;
-  }
-
-  .menu-toggle {
-    display: block;
-  }
-
-  .login-area {
-    order: -1;
-  }
-}
-
 /* HERO SECTION */
 .hero {
   height: 100vh;
@@ -171,14 +141,6 @@ html {
   color: #fff;
 }
 
-@media (max-width: 768px) {
-  .hero-text h1 {
-    font-size: 2rem;
-  }
-  .hero-text p {
-    font-size: 1rem;
-  }
-}
   /* Serviços */
   .sobre {
     padding: 40px 20px;
@@ -238,27 +200,6 @@ html {
     box-shadow: 0 6px 15px rgba(0, 0, 0, 0.6);
   }
 
-  @media (min-width: 1200px) {
-    .card-link {
-      flex: 1 1 22%;
-      max-width: 22%;
-    }
-  }
-  
-  @media (min-width: 768px) and (max-width: 1199px) {
-    .card-link {
-      flex: 1 1 45%;
-      max-width: 45%;
-    }
-  }
-  
-  @media (max-width: 767px) {
-    .card-link {
-      flex: 1 1 100%;
-      max-width: 100%;
-    }
-  }
-  
 
   .sobre-nos {
     padding: 80px 5% 40px;
@@ -620,134 +561,7 @@ html {
     scroll-behavior: smooth;
   }
   
-  /* Responsividade: Ajustes para telas pequenas */
-@media (max-width: 768px) {
-
-    /* Navbar */
-    .navbar {
-      padding: 10px 10px;
-    }
   
-    .nav-links {
-      flex-direction: column;
-      gap: 10px;
-      text-align: center;
-    }
-  
-    /* Hero Section */
-    .hero {
-      padding: 40px 10px;
-    }
-  
-    .hero-content {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .hero-text {
-      text-align: center;
-      margin-bottom: 20px;
-    }
-  
-    /* Ajustes nos cards */
-    .cards {
-      flex-direction: column;
-      align-items: center;
-    }
-  
-    .card {
-      width: 90%;
-      max-width: 350px; /* Evita que o card fique muito grande em telas pequenas */
-      margin-bottom: 20px;
-    }
-  
-    /* Ajustes na seção de contato */
-    .contato {
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      padding: 30px 10px;
-    }
-  
-    .contato-info, .contato-form {
-      width: 90%; /* Torna as seções mais estreitas */
-      margin-bottom: 20px;
-    }
-  
-    .contato-form {
-      background-color: #f9f9f9;
-    }
-  
-    .contato-info p {
-      font-size: 16px;
-    }
-  
-    .contato-form label, .contato-form input, .contato-form textarea {
-      font-size: 14px;
-    }
-  
-    /* Ajustes nos botões */
-    .contato-form button {
-      padding: 10px;
-    }
-  }
-  
-  /* Responsividade para telas menores que 480px */
-  @media (max-width: 480px) {
-  
-    /* Navbar */
-    .navbar {
-      padding: 8px 5px;
-    }
-  
-    .nav-links {
-      gap: 15px;
-    }
-  
-    /* Hero Section */
-    .hero-text h1 {
-      font-size: 2rem;
-    }
-  
-    .hero-text p {
-      font-size: 1rem;
-    }
-  
-    .hero-image img {
-      max-width: 100%;
-    }
-  
-    /* Ajuste para cards */
-    .card {
-      width: 90%;
-      max-width: 320px;
-      padding: 15px;
-    }
-  
-    /* Ajustes no formulário de contato */
-    .contato-form {
-      padding: 15px;
-    }
-  
-    .contato-info p {
-      font-size: 14px;
-    }
-  
-    .contato-form input, .contato-form textarea {
-      font-size: 12px;
-    }
-  
-    /* Ajuste no botão */
-    .contato-form button {
-      padding: 10px;
-      font-size: 14px;
-    }
-  
-    /* Ajuste na seção "Sobre" */
-    .sobre h2 {
-      font-size: 28px;
-    }
-  }
                                             /*CSS TELA CAPACITAÇÃO*/
   
   .pagina-servico {
@@ -955,24 +769,3 @@ html {
 }
 
 
-
-/* Responsivo */
-@media (max-width: 768px) {
-  .footer-container {
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-  }
-
-  .footer-logo,
-  .footer-links,
-  .footer-contact {
-    flex: none;
-    width: 100%;
-  }
-  .footer-contact .footer-social {
-    margin-top: 15px;
-    display: flex;
-    gap: 12px;
-  }
-}

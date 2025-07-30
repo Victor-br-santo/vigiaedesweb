@@ -14,28 +14,46 @@
 </head>
 <body>
  
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-  <div class="container">
-    <a class="navbar-brand" href="#inicio">
-      <img src="img/logo_editada.svg" alt="Logo VigiaAedes" style="height: 40px;">
+  <header class="navbar bg-dark">
+  <div class="container d-flex flex-wrap justify-content-between align-items-center py-2">
+
+    <!-- Logo -->
+    <a href="#inicio" class="navbar-brand">
+      <img src="img/logo_editada.svg" alt="Logo VigiaAedes" style="height: 45px;">
     </a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+
+    <!-- Menu (usando d-none d-md-flex para esconder no mobile e mostrar no desktop) -->
+    <ul class="nav-links d-none d-md-flex">
+      <li><a href="#inicio">Início</a></li>
+      <li><a href="#servicos">Serviços</a></li>
+      <li><a href="#sobre">Sobre nós</a></li>
+      <li><a href="blog.html">Blog</a></li>
+      <li><a href="#contato">Fale conosco</a></li>
+    </ul>
+
+    <!-- Botão login -->
+    <div class="login-area">
+      <button class="btn-login">Compartilhe seu desafio</button>
+    </div>
+
+    <!-- Menu hamburguer para mobile -->
+    <button class="navbar-toggler d-md-none ms-auto" type="button" data-bs-toggle="collapse" data-bs-target="#mobileMenu">
       <span class="navbar-toggler-icon"></span>
     </button>
-
-    <div class="collapse navbar-collapse" id="navbarNav">
-      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-        <li class="nav-item"><a class="nav-link" href="#inicio">Início</a></li>
-        <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
-        <li class="nav-item"><a class="nav-link" href="#sobre">Sobre nós</a></li>
-        <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
-        <li class="nav-item"><a class="nav-link" href="#contato">Fale conosco</a></li>
-      </ul>
-
-      <a href="#contato" class="btn btn-warning">Compartilhe seu desafio</a>
-    </div>
   </div>
-</nav>
+
+  <!-- Menu colapsável (mobile) -->
+  <div class="collapse navbar-collapse d-md-none" id="mobileMenu">
+    <ul class="nav flex-column text-center">
+      <li class="nav-item"><a class="nav-link" href="#inicio">Início</a></li>
+      <li class="nav-item"><a class="nav-link" href="#servicos">Serviços</a></li>
+      <li class="nav-item"><a class="nav-link" href="#sobre">Sobre nós</a></li>
+      <li class="nav-item"><a class="nav-link" href="blog.html">Blog</a></li>
+      <li class="nav-item"><a class="nav-link" href="#contato">Fale conosco</a></li>
+    </ul>
+  </div>
+</header>
+
 
   
 
