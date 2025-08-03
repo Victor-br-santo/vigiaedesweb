@@ -37,6 +37,10 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use(postRoutes);
 
+app.get('/painel/login', (req, res) => {
+  res.render('admin/login'); // vai procurar em /views/admin/login.ejs
+});
+
 
 // Testar a conexão com o banco logo após configurar o pool
 pool.query('SELECT NOW()', (err, res) => {
