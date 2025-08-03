@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-const inscricaoRoutes = require('.routes/inscricao');
+const inscricaoRoutes = require('./routes/inscricao');
 
 const app = express();
 const router = express.Router();
