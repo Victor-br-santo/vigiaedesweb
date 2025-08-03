@@ -34,16 +34,10 @@ function verificarLogin(req, res, next) {
   next();
 }
 
-// server.js ou routes/admin.js
-app.get('/painel/inscricoes', verificarLogin, async (req, res) => {
-  try {
-    const { rows } = await pool.query('SELECT * FROM inscricoes ORDER BY id DESC');
-    res.render('admin/partials/inscricoes', { inscricoes: rows });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Erro ao buscar inscrições');
-  }
+app.get('/painel', verificarLogin, (req, res) => {
+  res.render('admin/dashboard'); // carrega o dashboard completo com todas as abas
 });
+
 
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
