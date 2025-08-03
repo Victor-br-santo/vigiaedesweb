@@ -15,7 +15,7 @@
          <li><a href="#" onclick="mostrarAba('inicio')" id="link-inicio">Início</a></li>
          <li><a href="#" onclick="mostrarAba('posts')" id="link-posts">Gerenciar posts</a></li>
          <li><a href="#" onclick="mostrarAba('mensagens')" id="link-mensagens">Mensagens</a></li>
-         <li><a href="#" onclick="mostrarAba('inscrições')" id="link-mensagens">inscrições</a></li>
+         <li><a href="#" onclick="mostrarAba('inscrições')" id="link-inscrições">inscrições</a></li>
          <li><a href="#">Sair</a></li>
       </ul>
 
@@ -59,26 +59,41 @@
 
 <script>
   function mostrarAba(aba) {
-    const abas = document.querySelectorAll(".aba");
-    abas.forEach(div => div.style.display = "none");
+  const abas = document.querySelectorAll(".aba");
+  abas.forEach(div => div.style.display = "none");
 
-    document.getElementById(`aba-${aba}`).style.display = "block";
+  const abaSelecionada = document.getElementById(`aba-${aba}`);
+  if (abaSelecionada) {
+    abaSelecionada.style.display = "block";
 
     // Atualizar menu ativo
     const links = document.querySelectorAll("aside a");
     links.forEach(link => link.classList.remove("ativo"));
-    document.getElementById(`link-${aba}`).classList.add("ativo");
+    const linkAtivo = document.getElementById(`link-${aba}`);
+    if (linkAtivo) linkAtivo.classList.add("ativo");
 
-    // Atualizar conteúdos se necessário
+    // Carregamento dinâmico das abas
     if (aba === "posts") {
       carregarPosts();
+    } else if (aba === "inscrições") {
+      fetch("/painel/inscricoes")
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("conteudo-inscricoes").innerHTML = html;
+        })
+        .catch(err => {
+          document.getElementById("conteudo-inscricoes").innerHTML = "Erro ao carregar inscrições.";
+          console.error(err);
+        });
     }
   }
+}
 
-  // Marcar como ativo
-  document.addEventListener("DOMContentLoaded", () => {
-    mostrarAba("posts"); // Carrega 'Gerenciar posts' por padrão
-  });
+// Marcar como ativo ao carregar
+document.addEventListener("DOMContentLoaded", () => {
+  mostrarAba("posts");
+});
+
 
   
   async function carregarPosts() {
@@ -143,31 +158,6 @@ form.addEventListener("submit", async (e) => {
     alert("Erro na conexão com o servidor.");
   }
 });
-
-//////////////////////////////////
-
-function mostrarAba(aba) {
-  const abas = document.querySelectorAll('.aba');
-  abas.forEach(el => el.style.display = 'none');
-  const abaSelecionada = document.getElementById(aba);
-  if (abaSelecionada) {
-    abaSelecionada.style.display = 'block';
-
-    // Se for a aba de inscrições, buscar conteúdo via AJAX
-    if (aba === 'inscrições') {
-      fetch('/painel/inscricoes')
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById('conteudo-inscricoes').innerHTML = html;
-        })
-        .catch(err => {
-          document.getElementById('conteudo-inscricoes').innerHTML = 'Erro ao carregar inscrições.';
-          console.error(err);
-        });
-    }
-  }
-}
-
 </script>
 
 </body>

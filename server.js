@@ -68,6 +68,11 @@ pool.query('SELECT NOW()', (err, res) => {
   }
 });
 
+// Rota protegida para o dashboard
+app.get("/dashboard", autenticarToken, (req, res) => {
+  res.render("dashboard", { admin: req.admin });
+});
+
 // Rota GET para buscar usuários no banco
 app.get("/usuarios", (req, res) => {
   const query = "SELECT * FROM usuarios";  // Query para pegar todos os usuários
