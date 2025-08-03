@@ -1,0 +1,95 @@
+const express = require('express');
+const router = express.Router();
+const multer = require('multer');
+const path = require('path');
+const pool = require('../db');
+
+// Configurar armazenamento de arquivos
+const storage = multer.diskStorage({
+  destination: (req, file, cb) => {
+    cb(null, 'public/uploads/');
+  },
+  filename: (req, file, cb) => {
+    const ext = path.extname(file.originalname);
+    const nomeUnico = `${Date.now()}-${Math.round(Math.random() * 1E9)}${ext}`;
+    cb(null, nomeUnico);
+  }
+});
+
+const upload = multer({ storage });
+
+router.post('/', upload.single('comprovante'), async (req, res) => {
+  try {
+    const { nome, email, cpf, tipo } = req.body;
+    const comprovante = req.file ? req.file.filename : null;
+
+    await pool.query(
+      'INSERT INTO inscricoes (nome, email, cpf, tipo, comprovante) VALUES ($1, $2, $3, $4, $5)',
+      [nome, email, cpf, tipo, comprovante]
+    );
+
+    res.send(`
+      <div style="padding:2rem;font-family:sans-serif;">
+        <h2>Inscrição recebida!</h2>
+        <p>Em breve você receberá um e-mail com os dados de pagamento via Pix.</p>
+        <a href="/" style="display:inline-block;margin-top:1rem;">Voltar ao site</a>
+      </div>
+    `);
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao processar a inscrição.');
+  }
+});
+
+module.exports = router;
+
+// Rota para listar inscrições - acesso simples e separado
+router.get('/admin-inscricoes', async (req, res) => {
+  try {
+    const result = await pool.query('SELECT * FROM inscricoes ORDER BY data_envio DESC');
+    const inscricoes = result.rows;
+
+    // Página HTML básica para listar
+    let html = `
+      <h1>Lista de Inscrições</h1>
+      <table border="1" cellpadding="8" cellspacing="0">
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Nome</th>
+            <th>Email</th>
+            <th>CPF</th>
+            <th>Tipo</th>
+            <th>Comprovante</th>
+            <th>Data</th>
+          </tr>
+        </thead>
+        <tbody>
+    `;
+
+    inscricoes.forEach(inscricao => {
+      html += `
+        <tr>
+          <td>${inscricao.id}</td>
+          <td>${inscricao.nome}</td>
+          <td>${inscricao.email}</td>
+          <td>${inscricao.cpf}</td>
+          <td>${inscricao.tipo}</td>
+          <td>${inscricao.comprovante ? `<a href="/uploads/${inscricao.comprovante}" target="_blank">Ver arquivo</a>` : '—'}</td>
+          <td>${new Date(inscricao.data_envio).toLocaleString()}</td>
+        </tr>
+      `;
+    });
+
+    html += `
+        </tbody>
+      </table>
+      <a href="/" style="display:block;margin-top:20px;">Voltar ao site</a>
+    `;
+
+    res.send(html);
+  } catch (error) {
+    console.error(error);
+    res.status(500).send('Erro ao listar inscrições.');
+  }
+});

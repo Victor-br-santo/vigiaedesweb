@@ -2,6 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
+const inscricaoRoutes = require('./routes/inscricao');
 
 const app = express();
 const router = express.Router();
@@ -26,8 +27,10 @@ const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
 const emailTo = process.env.EMAIL_TO;
 
+app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
+app.use('/inscricao', inscricaoRoutes);
 
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use(express.static(path.join(__dirname, 'public')));
