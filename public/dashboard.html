@@ -15,7 +15,7 @@
          <li><a href="#" onclick="mostrarAba('inicio')" id="link-inicio">Início</a></li>
          <li><a href="#" onclick="mostrarAba('posts')" id="link-posts">Gerenciar posts</a></li>
          <li><a href="#" onclick="mostrarAba('mensagens')" id="link-mensagens">Mensagens</a></li>
-         <li><a href="/painel/inscricoes">Inscrições</a></li>
+         <li><a href="#" onclick="mostrarAba('inscrições')" id="link-mensagens">inscrições</a></li>
          <li><a href="#">Sair</a></li>
       </ul>
 
@@ -51,9 +51,11 @@
 </div>
 
 <!-- inscrições -->
- <div id="inscrições" class="aba" style="display:none">
-  <div id="conteudo-inscricoes">Carregando inscrições...</div>
+ <div class="aba" id="inscrições" style="display:none;">
+  <h2>Inscrições</h2>
+  <div id="conteudo-inscricoes">Carregando...</div>
 </div>
+
 
 <script>
   function mostrarAba(aba) {
@@ -145,24 +147,24 @@ form.addEventListener("submit", async (e) => {
 //////////////////////////////////
 
 function mostrarAba(aba) {
-  // Oculta todas as abas
   const abas = document.querySelectorAll('.aba');
-  abas.forEach(a => a.style.display = 'none');
+  abas.forEach(el => el.style.display = 'none');
+  const abaSelecionada = document.getElementById(aba);
+  if (abaSelecionada) {
+    abaSelecionada.style.display = 'block';
 
-  // Mostra a aba clicada
-  document.getElementById(aba).style.display = 'block';
-
-  // Se for a aba inscrições, carrega via AJAX
-  if (aba === 'inscrições') {
-    fetch('/painel/inscricoes')
-      .then(res => res.text())
-      .then(html => {
-        document.getElementById('conteudo-inscricoes').innerHTML = html;
-      })
-      .catch(err => {
-        document.getElementById('conteudo-inscricoes').innerHTML = 'Erro ao carregar inscrições.';
-        console.error(err);
-      });
+    // Se for a aba de inscrições, buscar conteúdo via AJAX
+    if (aba === 'inscrições') {
+      fetch('/painel/inscricoes')
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById('conteudo-inscricoes').innerHTML = html;
+        })
+        .catch(err => {
+          document.getElementById('conteudo-inscricoes').innerHTML = 'Erro ao carregar inscrições.';
+          console.error(err);
+        });
+    }
   }
 }
 
