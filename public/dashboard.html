@@ -50,6 +50,11 @@
   <p>(Em breve...)</p>
 </div>
 
+<!-- inscrições -->
+ <div id="inscrições" class="aba" style="display:none">
+  <div id="conteudo-inscricoes">Carregando inscrições...</div>
+</div>
+
 <script>
   function mostrarAba(aba) {
     const abas = document.querySelectorAll(".aba");
@@ -136,6 +141,30 @@ form.addEventListener("submit", async (e) => {
     alert("Erro na conexão com o servidor.");
   }
 });
+
+//////////////////////////////////
+
+function mostrarAba(aba) {
+  // Oculta todas as abas
+  const abas = document.querySelectorAll('.aba');
+  abas.forEach(a => a.style.display = 'none');
+
+  // Mostra a aba clicada
+  document.getElementById(aba).style.display = 'block';
+
+  // Se for a aba inscrições, carrega via AJAX
+  if (aba === 'inscrições') {
+    fetch('/painel/inscricoes')
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById('conteudo-inscricoes').innerHTML = html;
+      })
+      .catch(err => {
+        document.getElementById('conteudo-inscricoes').innerHTML = 'Erro ao carregar inscrições.';
+        console.error(err);
+      });
+  }
+}
 
 </script>
 

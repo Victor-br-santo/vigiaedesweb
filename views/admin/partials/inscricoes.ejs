@@ -1,0 +1,28 @@
+<table>
+  <thead>
+    <tr>
+      <th>Nome</th>
+      <th>Email</th>
+      <th>Status</th>
+      <th>Ação</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% inscricoes.forEach(inscricao => { %>
+      <tr>
+        <td><%= inscricao.nome %></td>
+        <td><%= inscricao.email %></td>
+        <td><%= inscricao.status_pagamento %></td>
+        <td>
+          <% if (inscricao.status_pagamento !== 'pago') { %>
+            <form method="POST" action="/painel/inscricoes/<%= inscricao.id %>/marcar-pago">
+              <button type="submit">Marcar como pago</button>
+            </form>
+          <% } else { %>
+            <span>✅ Pago</span>
+          <% } %>
+        </td>
+      </tr>
+    <% }) %>
+  </tbody>
+</table>
