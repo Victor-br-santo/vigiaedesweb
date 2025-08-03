@@ -2,66 +2,163 @@
 <html lang="pt-BR">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Dashboard - Admin</title>
-
-  <!-- CSS AdminLTE -->
-  <link rel="stylesheet" href="/plugins/fontawesome-free/css/all.min.css">
-  <link rel="stylesheet" href="/dist/css/adminlte.min.css">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Dashboard - VigiaAedes</title>
+  <link rel="stylesheet" href="../public/css/Dashstyle.css" />
 </head>
-<body class="hold-transition sidebar-mini">
-  <div class="wrapper">
-    
-    <!-- Navbar -->
-    <nav class="main-header navbar navbar-expand navbar-white navbar-light">
-      <ul class="navbar-nav">
-        <li class="nav-item">
-          <a class="nav-link" data-widget="pushmenu" href="#"><i class="fas fa-bars"></i></a>
-        </li>
-        <li class="nav-item d-none d-sm-inline-block">
-          <a href="#" class="nav-link">Início</a>
-        </li>
+<body>
+  <div class="dashboard-container">
+    <aside class="sidebar">
+      <h2>VigiaAedes</h2>
+      <nav>
+        <ul>
+         <li><a href="#" onclick="mostrarAba('inicio')" id="link-inicio">Início</a></li>
+         <li><a href="#" onclick="mostrarAba('posts')" id="link-posts">Gerenciar posts</a></li>
+         <li><a href="#" onclick="mostrarAba('mensagens')" id="link-mensagens">Mensagens</a></li>
+         <li><a href="#" onclick="mostrarAba('inscrições')" id="link-inscrições">inscrições</a></li>
+         <li><a href="#">Sair</a></li>
       </ul>
-    </nav>
 
-    <!-- Sidebar -->
-    <aside class="main-sidebar sidebar-dark-primary elevation-4">
-      <a href="#" class="brand-link">
-        <span class="brand-text font-weight-light">Admin Dashboard</span>
-      </a>
-      <div class="sidebar">
-        <nav class="mt-2">
-          <ul class="nav nav-pills nav-sidebar flex-column" role="menu">
-            <li class="nav-item">
-              <a href="#" class="nav-link active">
-                <i class="nav-icon fas fa-home"></i>
-                <p>Início</p>
-              </a>
-            </li>
-          </ul>
-        </nav>
-      </div>
+      </nav>
     </aside>
+   <!-- Início -->
+<div id="aba-inicio" class="aba">
+  <h1>Bem-vindo, Administrador</h1>
+</div>
 
-    <!-- Content -->
-    <div class="content-wrapper">
-      <div class="content-header">
-        <div class="container-fluid">
-          <h1 class="m-0">Bem-vindo ao Painel do Administrador</h1>
-        </div>
-      </div>
-      <div class="content">
-        <div class="container-fluid">
-          <!-- Aqui você pode inserir cards, gráficos, etc -->
-          <p>Este é o início do seu dashboard.</p>
-        </div>
-      </div>
-    </div>
-  </div>
+<div class="aba" id="aba-posts">
+  
+<!-- Gerenciar posts -->
+ <div class="criar-post">
+<form id="form-novo-post" action="/posts" method="POST" enctype="multipart/form-data">
+  <input type="text" id="titulo" name="titulo" placeholder="Título do post" required />
+  <textarea id="conteudo" name="conteudo" placeholder="Conteúdo do post" required></textarea>
+  <input type="file" id="imagem" name="imagem" accept="image/*" />
+  <button type="submit">Publicar</button>
+</form>
+</div>
 
-  <!-- Scripts JS -->
-  <script src="/plugins/jquery/jquery.min.js"></script>
-  <script src="/plugins/bootstrap/js/bootstrap.bundle.min.js"></script>
-  <script src="/dist/js/adminlte.min.js"></script>
+  <section class="posts">
+    <h2>Posts Recentes</h2>
+    <div id="posts-container" class="cards"></div>
+  </section>
+</div>
+
+<!-- Mensagens -->
+<div id="aba-mensagens" class="aba" style="display: none">
+  <h2>Mensagens recebidas</h2>
+  <p>(Em breve...)</p>
+</div>
+
+<!-- inscrições -->
+ <div class="aba" id="inscrições" style="display:none;">
+  <h2>Inscrições</h2>
+  <div id="conteudo-inscricoes">Carregando...</div>
+</div>
+
+
+<script>
+  function mostrarAba(aba) {
+  const abas = document.querySelectorAll(".aba");
+  abas.forEach(div => div.style.display = "none");
+
+  const abaSelecionada = document.getElementById(`aba-${aba}`);
+  if (abaSelecionada) {
+    abaSelecionada.style.display = "block";
+
+    // Atualizar menu ativo
+    const links = document.querySelectorAll("aside a");
+    links.forEach(link => link.classList.remove("ativo"));
+    const linkAtivo = document.getElementById(`link-${aba}`);
+    if (linkAtivo) linkAtivo.classList.add("ativo");
+
+    // Carregamento dinâmico das abas
+    if (aba === "posts") {
+      carregarPosts();
+    } else if (aba === "inscrições") {
+      fetch("/painel/inscricoes")
+        .then(res => res.text())
+        .then(html => {
+          document.getElementById("conteudo-inscricoes").innerHTML = html;
+        })
+        .catch(err => {
+          document.getElementById("conteudo-inscricoes").innerHTML = "Erro ao carregar inscrições.";
+          console.error(err);
+        });
+    }
+  }
+}
+
+// Marcar como ativo ao carregar
+document.addEventListener("DOMContentLoaded", () => {
+  mostrarAba("posts");
+});
+
+
+  
+  async function carregarPosts() {
+  try {
+    const resposta = await fetch("/posts");
+    const posts = await resposta.json();
+
+    const container = document.getElementById("posts-container");
+    container.innerHTML = "";
+
+    posts.forEach(post => {
+      const card = document.createElement("div");
+      card.className = "post-card";
+
+      card.innerHTML = `
+        <img src="${post.imagem || 'https://via.placeholder.com/300x150'}" alt="Imagem do post" class="post-imagem" />
+        <div class="post-conteudo">
+          <h3>${post.titulo}</h3>
+          <p>${post.conteudo}</p>
+          <button class="saiba-mais">Saiba mais</button>
+        </div>
+      `;
+
+      container.appendChild(card);
+    });
+
+  } catch (erro) {
+    console.error("Erro ao carregar posts:", erro);
+  }
+}
+
+
+
+const form = document.getElementById("form-novo-post");
+
+form.addEventListener("submit", async (e) => {
+  e.preventDefault();
+
+  const formData = new FormData();
+  formData.append("titulo", document.getElementById("titulo").value.trim());
+  formData.append("conteudo", document.getElementById("conteudo").value.trim());
+  const imagemInput = document.getElementById("imagem");
+  if (imagemInput.files[0]) {
+    formData.append("imagem", imagemInput.files[0]);
+  }
+
+  try {
+    const resposta = await fetch("/posts", {
+      method: "POST",
+      body: formData
+    });
+
+    if (resposta.ok) {
+      form.reset();
+      carregarPosts();
+    } else {
+      const erro = await resposta.json();
+      alert("Erro ao criar post: " + (erro.erro || "Erro desconhecido"));
+    }
+  } catch (err) {
+    console.error("Erro ao enviar post:", err);
+    alert("Erro na conexão com o servidor.");
+  }
+});
+</script>
+
 </body>
 </html>
