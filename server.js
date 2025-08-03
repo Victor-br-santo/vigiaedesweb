@@ -27,6 +27,12 @@ const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
 const emailTo = process.env.EMAIL_TO;
 
+function verificarLogin(req, res, next) {
+  // Aqui você pode checar se o admin está logado.
+  // No futuro vamos integrar isso com sessões ou JWT
+  // Por enquanto, para testes, vamos deixar sempre passar:
+  next();
+}
 
 // server.js ou routes/admin.js
 app.get('/painel/inscricoes', verificarLogin, async (req, res) => {
