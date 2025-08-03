@@ -1,6 +1,5 @@
 
 /* style2.css - REVISADO PARA RESPONSIVIDADE GERAL */
-
 body {
   font-family: 'Arimo', 'Bai Jamjuree', sans-serif;
   margin: 0;
@@ -12,6 +11,7 @@ body {
 
 h1, h2, h3, h4, h5, .btn-login {
   font-family: 'Bai Jamjuree', sans-serif;
+  margin-top: 0;
 }
 
 html {
@@ -497,70 +497,6 @@ html {
     text-align: center;
   }
 
-                                     /* NAV BAR */
-  
-                                     .pagina-interna .navbar {
-                                      background-color: #070b30; /* Azul escuro */
-                                      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
-                                      padding: 10px 0; /* Navbar já menor */
-                                      position: fixed;
-                                      width: 100%;
-                                      z-index: 1000;
-                                    }
-                                    
-                                    .pagina-interna .nav-links li a {
-                                      color: white;
-                                    }
-                                    .navbar-container {
-                                      max-width: 1200px;
-                                      margin: 0 auto;
-                                      padding: 0 40px;
-                                      display: flex;
-                                      align-items: center;
-                                      justify-content: space-between;
-                                      gap: 20px;
-                                      height: 80px;
-                                    }
-                                    
-                                    .navbar-brand img {
-                                      height: 100px;
-                                      margin-left: 20px;
-                                    }
-                                    
-                                    .nav-links {
-                                      list-style: none;
-                                      display: flex;
-                                      gap: 20px;
-                                      padding: 20px;
-                                      justify-content: center;
-                                      flex-grow: 1; /* Faz os links crescerem e ocuparem o espaço central */
-                                    }
-                                    
-                                    .nav-links li {
-                                      margin: 0 5px;
-                                    }
-                                    
-                                    .login-area {
-                                      flex-shrink: 0; /* Impede o botão de encolher */
-                                      margin-left: auto;
-                                    }
-                                    
-
-                                    
-                                    
-                                   
-                                    
-    
-  /* Adiciona espaçamento no topo pra não esconder seções */
-  body {
-    padding-top: 70px;
-  }
-  
-  /* Scroll suave */
-  html {
-    scroll-behavior: smooth;
-  }
-  
   
                                             /*CSS TELA CAPACITAÇÃO*/
   
@@ -768,4 +704,8 @@ html {
   transform: scale(1.1);
 }
 
+/* * {
+  outline: 1px solid red;
+}
+ */
 
