@@ -96,7 +96,7 @@
   successMessage.textContent = data.mensagem || "Sucesso!";
   if (isLogin && data.token) {
     localStorage.setItem("adminToken", data.token);
-    window.location.href = "/dashboard.ejs";
+    window.location.href = "/dashboard";
   } else if (!isLogin) {
     // Cadastro bem-sucedido: volta para login
     setTimeout(() => {
