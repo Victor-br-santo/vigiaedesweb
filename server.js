@@ -27,6 +27,18 @@ const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
 const emailTo = process.env.EMAIL_TO;
 
+
+// server.js ou routes/admin.js
+app.get('/painel/inscricoes', verificarLogin, async (req, res) => {
+  try {
+    const { rows } = await pool.query('SELECT * FROM inscricoes ORDER BY id DESC');
+    res.render('admin/partials/inscricoes', { inscricoes: rows });
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao buscar inscrições');
+  }
+});
+
 app.use(express.urlencoded({ extended: true }));
 app.use(cors());
 app.use(express.json());
@@ -39,18 +51,6 @@ app.use(postRoutes);
 
 app.get('/painel/login', (req, res) => {
   res.render('admin/login'); // vai procurar em /views/admin/login.ejs
-});
-
-
-// server.js ou routes/admin.js
-app.get('/painel/inscricoes', verificarLogin, async (req, res) => {
-  try {
-    const { rows } = await pool.query('SELECT * FROM inscricoes ORDER BY id DESC');
-    res.render('admin/partials/inscricoes', { inscricoes: rows });
-  } catch (err) {
-    console.error(err);
-    res.status(500).send('Erro ao buscar inscrições');
-  }
 });
 
 // Testar a conexão com o banco logo após configurar o pool
