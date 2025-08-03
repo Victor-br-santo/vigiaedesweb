@@ -1,8 +1,8 @@
 // posts.js (em: ./public/routes/posts.js ou similar)
 const express = require("express");
 const router = express.Router();
-const pool = require("../../db");
-const upload = require("../../middlewares/upload");
+const pool = require("../db");
+const upload = require("../middlewares/upload");
 
 // POST - Criar novo post   
 router.post("/posts", upload.single("imagem"), async (req, res) => {

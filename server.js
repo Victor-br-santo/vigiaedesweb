@@ -2,7 +2,7 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
-const inscricaoRoutes = require('./routes/inscricao');
+const inscricaoRoutes = require('.routes/inscricao');
 
 const app = express();
 const router = express.Router();
@@ -15,7 +15,7 @@ const jwt = require("jsonwebtoken");
 const pool = require("./db");
 require('dotenv').config();
 
-const postRoutes = require("./public/routes/posts");
+const postRoutes = require("./routes/posts");
 const nodemailer = require("nodemailer");
 
 const uploadDir = path.join(__dirname, "public/uploads");
