@@ -9,8 +9,6 @@ const inscricaoRoutes = require('./routes/inscricao');
 
 const app = express();
 const router = express.Router();
-const verificarToken = require("./middlewares/verificarToken");
-
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
