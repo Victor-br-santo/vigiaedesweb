@@ -90,6 +90,7 @@
      // Carregar dados do admin usando token JWT
   async function carregarAdmin() {
     const token = localStorage.getItem("adminToken");
+    console.log("Token usado no fetch:", token);
     if (!token) {
       alert("Você não está logado!");
       logout();
