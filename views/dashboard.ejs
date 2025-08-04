@@ -5,42 +5,6 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard - VigiaAedes</title>
   <link rel="stylesheet" href="../public/css/Dashstyle.css" />
-
-  <script>
-  (async () => {
-    const token = localStorage.getItem("adminToken");
-
-    if (!token) {
-      // Redireciona se não houver token
-      window.location.href = "/painel/login";
-      return;
-    }
-
-    try {
-      const response = await fetch("/admin/verificar", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: token,
-        },
-      });
-
-      if (!response.ok) {
-        // Token inválido, redireciona para login
-        window.location.href = "/painel/login";
-      }
-
-      // Se quiser, você pode mostrar o nome do admin:
-      // const data = await response.json();
-      // document.getElementById("nomeAdmin").textContent = data.nome;
-
-    } catch (err) {
-      // Erro na verificação, redireciona
-      window.location.href = "/painel/login";
-    }
-  })();
-</script>
-
 </head>
 <body>
   <div class="dashboard-container">
@@ -48,200 +12,229 @@
       <h2>VigiaAedes</h2>
       <nav>
         <ul>
-         <li><a href="#" onclick="mostrarAba('inicio')" id="link-inicio">Início</a></li>
-         <li><a href="#" onclick="mostrarAba('posts')" id="link-posts">Gerenciar posts</a></li>
-         <li><a href="#" onclick="mostrarAba('mensagens')" id="link-mensagens">Mensagens</a></li>
-         <li><a href="#" onclick="mostrarAba('inscrições')" id="link-inscrições">inscrições</a></li>
-         <li><a href="#">Sair</a></li>
-      </ul>
-
+          <li><a href="#" onclick="mostrarAba('inicio')" id="link-inicio">Início</a></li>
+          <li><a href="#" onclick="mostrarAba('posts')" id="link-posts">Gerenciar posts</a></li>
+          <li><a href="#" onclick="mostrarAba('mensagens')" id="link-mensagens">Mensagens</a></li>
+          <li><a href="#" onclick="mostrarAba('inscricoes')" id="link-inscricoes">Inscrições</a></li>
+          <li><a href="#" onclick="logout()">Sair</a></li>
+        </ul>
       </nav>
     </aside>
-   <!-- Início -->
-<div id="aba-inicio" class="aba">
-  <h1>Bem-vindo, Administrador</h1>
-</div>
 
-<div class="aba" id="aba-posts">
-  
-<!-- Gerenciar posts -->
- <div class="criar-post">
-<form id="form-novo-post" action="/posts" method="POST" enctype="multipart/form-data">
-  <input type="text" id="titulo" name="titulo" placeholder="Título do post" required />
-  <textarea id="conteudo" name="conteudo" placeholder="Conteúdo do post" required></textarea>
-  <input type="file" id="imagem" name="imagem" accept="image/*" />
-  <button type="submit">Publicar</button>
-</form>
-</div>
+    <!-- Início -->
+    <div id="aba-inicio" class="aba" style="display:none;">
+      <h1>Bem-vindo, <span id="nome-admin">Administrador</span></h1>
+    </div>
 
-  <section class="posts">
-    <h2>Posts Recentes</h2>
-    <div id="posts-container" class="cards"></div>
-  </section>
-</div>
+    <!-- Posts -->
+    <div id="aba-posts" class="aba" style="display:none;">
+      <div class="criar-post">
+        <form id="form-novo-post" enctype="multipart/form-data">
+          <input type="text" id="titulo" name="titulo" placeholder="Título do post" required />
+          <textarea id="conteudo" name="conteudo" placeholder="Conteúdo do post" required></textarea>
+          <input type="file" id="imagem" name="imagem" accept="image/*" />
+          <button type="submit">Publicar</button>
+        </form>
+      </div>
 
-<!-- Mensagens -->
-<div id="aba-mensagens" class="aba" style="display: none">
-  <h2>Mensagens recebidas</h2>
-  <p>(Em breve...)</p>
-</div>
+      <section class="posts">
+        <h2>Posts Recentes</h2>
+        <div id="posts-container" class="cards"></div>
+      </section>
+    </div>
 
-<!-- inscrições -->
- <div class="aba" id="inscrições" style="display:none;">
-  <h2>Inscrições</h2>
-  <div id="conteudo-inscricoes">Carregando...</div>
-</div>
+    <!-- Mensagens -->
+    <div id="aba-mensagens" class="aba" style="display:none;">
+      <h2>Mensagens recebidas</h2>
+      <p>(Em breve...)</p>
+    </div>
 
+    <!-- Inscrições -->
+    <div id="aba-inscricoes" class="aba" style="display:none;">
+      <h2>Inscrições</h2>
+      <div id="conteudo-inscricoes">Carregando...</div>
+    </div>
+  </div>
 
-<script>
-  function mostrarAba(aba) {
-  const abas = document.querySelectorAll(".aba");
-  abas.forEach(div => div.style.display = "none");
+  <script>
+    // Função para mostrar aba selecionada e ocultar as outras
+    function mostrarAba(aba) {
+      const abas = document.querySelectorAll(".aba");
+      abas.forEach(div => div.style.display = "none");
 
-  const abaSelecionada = document.getElementById(`aba-${aba}`);
-  if (abaSelecionada) {
-    abaSelecionada.style.display = "block";
+      const abaSelecionada = document.getElementById(`aba-${aba}`);
+      if (abaSelecionada) {
+        abaSelecionada.style.display = "block";
 
-    // Atualizar menu ativo
-    const links = document.querySelectorAll("aside a");
-    links.forEach(link => link.classList.remove("ativo"));
-    const linkAtivo = document.getElementById(`link-${aba}`);
-    if (linkAtivo) linkAtivo.classList.add("ativo");
+        // Atualizar menu ativo
+        const links = document.querySelectorAll("aside a");
+        links.forEach(link => link.classList.remove("ativo"));
+        const linkAtivo = document.getElementById(`link-${aba}`);
+        if (linkAtivo) linkAtivo.classList.add("ativo");
 
-    // Carregamento dinâmico das abas
-    if (aba === "posts") {
-      carregarPosts();
-    } else if (aba === "inscrições") {
-      fetch("/painel/inscricoes")
-        .then(res => res.text())
-        .then(html => {
-          document.getElementById("conteudo-inscricoes").innerHTML = html;
-        })
-        .catch(err => {
-          document.getElementById("conteudo-inscricoes").innerHTML = "Erro ao carregar inscrições.";
-          console.error(err);
+        // Carregamento dinâmico das abas
+        if (aba === "posts") {
+          carregarPosts();
+        } else if (aba === "inscricoes") {
+          carregarInscricoes();
+        }
+      }
+    }
+
+    // Logout - limpa token e redireciona ao login
+    function logout() {
+      localStorage.removeItem("adminToken");
+      window.location.href = "/painel/login";
+    }
+
+    // Carregar dados do admin usando token JWT
+    async function carregarAdmin() {
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        alert("Você não está logado!");
+        logout();
+        return;
+      }
+
+      try {
+        const res = await fetch("/api/admin-info", {
+          headers: {
+            Authorization: "Bearer " + token
+          }
         });
+
+        if (!res.ok) throw new Error("Token inválido ou expirado");
+
+        const data = await res.json();
+        const nomeAdmin = data.admin?.nome || "Administrador";
+        document.getElementById("nome-admin").textContent = nomeAdmin;
+
+        // Após validar admin, já mostrar a aba inicial
+        mostrarAba("inicio");
+
+      } catch (err) {
+        alert("Erro na autenticação, faça login novamente.");
+        logout();
+      }
     }
-  }
-}
 
-// Marcar como ativo ao carregar
-document.addEventListener("DOMContentLoaded", () => {
-  mostrarAba("posts");
-});
+    // Carregar posts protegidos
+    async function carregarPosts() {
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        alert("Token não encontrado. Faça login novamente.");
+        logout();
+        return;
+      }
 
+      try {
+        const resposta = await fetch("/posts", {
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        });
 
-  
-  async function carregarPosts() {
-  try {
-    const resposta = await fetch("/posts");
-    const posts = await resposta.json();
+        if (!resposta.ok) throw new Error("Erro ao carregar posts");
 
-    const container = document.getElementById("posts-container");
-    container.innerHTML = "";
+        const posts = await resposta.json();
 
-    posts.forEach(post => {
-      const card = document.createElement("div");
-      card.className = "post-card";
+        const container = document.getElementById("posts-container");
+        container.innerHTML = "";
 
-      card.innerHTML = `
-        <img src="${post.imagem || 'https://via.placeholder.com/300x150'}" alt="Imagem do post" class="post-imagem" />
-        <div class="post-conteudo">
-          <h3>${post.titulo}</h3>
-          <p>${post.conteudo}</p>
-          <button class="saiba-mais">Saiba mais</button>
-        </div>
-      `;
+        posts.forEach(post => {
+          const card = document.createElement("div");
+          card.className = "post-card";
 
-      container.appendChild(card);
-    });
+          card.innerHTML = `
+            <img src="${post.imagem || 'https://via.placeholder.com/300x150'}" alt="Imagem do post" class="post-imagem" />
+            <div class="post-conteudo">
+              <h3>${post.titulo}</h3>
+              <p>${post.conteudo}</p>
+              <button class="saiba-mais">Saiba mais</button>
+            </div>
+          `;
 
-  } catch (erro) {
-    console.error("Erro ao carregar posts:", erro);
-  }
-}
-
-
-
-const form = document.getElementById("form-novo-post");
-
-form.addEventListener("submit", async (e) => {
-  e.preventDefault();
-
-  const formData = new FormData();
-  formData.append("titulo", document.getElementById("titulo").value.trim());
-  formData.append("conteudo", document.getElementById("conteudo").value.trim());
-  const imagemInput = document.getElementById("imagem");
-  if (imagemInput.files[0]) {
-    formData.append("imagem", imagemInput.files[0]);
-  }
-
-  try {
-    const resposta = await fetch("/posts", {
-      method: "POST",
-      body: formData
-    });
-
-    if (resposta.ok) {
-      form.reset();
-      carregarPosts();
-    } else {
-      const erro = await resposta.json();
-      alert("Erro ao criar post: " + (erro.erro || "Erro desconhecido"));
+          container.appendChild(card);
+        });
+      } catch (erro) {
+        console.error("Erro ao carregar posts:", erro);
+        alert("Erro ao carregar posts.");
+      }
     }
-  } catch (err) {
-    console.error("Erro ao enviar post:", err);
-    alert("Erro na conexão com o servidor.");
-  }
-});
 
-async function carregarAdmin() {
-  const token = localStorage.getItem("adminToken");
-  if (!token) {
-    alert("Você não está logado!");
-    window.location.href = "/painel/login";
-    return;
-  }
+    // Submissão do formulário de novo post com token
+    document.getElementById("form-novo-post").addEventListener("submit", async (e) => {
+      e.preventDefault();
 
-  try {
-    const res = await fetch("/api/admin-info", {
-      headers: {
-        Authorization: "Bearer " + token
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        alert("Você precisa estar logado para publicar.");
+        logout();
+        return;
+      }
+
+      const formData = new FormData();
+      formData.append("titulo", document.getElementById("titulo").value.trim());
+      formData.append("conteudo", document.getElementById("conteudo").value.trim());
+
+      const imagemInput = document.getElementById("imagem");
+      if (imagemInput.files[0]) {
+        formData.append("imagem", imagemInput.files[0]);
+      }
+
+      try {
+        const resposta = await fetch("/posts", {
+          method: "POST",
+          headers: {
+            Authorization: "Bearer " + token
+          },
+          body: formData
+        });
+
+        if (resposta.ok) {
+          alert("Post publicado com sucesso!");
+          e.target.reset();
+          carregarPosts();
+        } else {
+          const erro = await resposta.json();
+          alert("Erro ao criar post: " + (erro.erro || "Erro desconhecido"));
+        }
+      } catch (err) {
+        console.error("Erro ao enviar post:", err);
+        alert("Erro na conexão com o servidor.");
       }
     });
 
-    if (!res.ok) throw new Error("Token inválido ou expirado");
+    // Carregar inscrições protegidas
+    async function carregarInscricoes() {
+      const token = localStorage.getItem("adminToken");
+      if (!token) {
+        alert("Token não encontrado. Faça login novamente.");
+        logout();
+        return;
+      }
 
-    const admin = await res.json();
-    document.getElementById("nome-admin").textContent = admin.email; // Exemplo
+      try {
+        const res = await fetch("/painel/inscricoes", {
+          headers: {
+            Authorization: "Bearer " + token
+          }
+        });
 
-  } catch (error) {
-    alert("Erro na autenticação, faça login novamente.");
-    localStorage.removeItem("adminToken");
-    window.location.href = "/painel/login";
-  }
-}
+        if (!res.ok) throw new Error("Erro ao carregar inscrições");
 
-// Chama essa função quando carregar a página
-window.onload = carregarAdmin;
+        const html = await res.text();
+        document.getElementById("conteudo-inscricoes").innerHTML = html;
 
-fetch("/dashboard", {
-  method: "GET",
-  headers: {
-    Authorization: `Bearer ${data.token}`,
-  },
-})
-.then((res) => {
-  if (res.ok) {
-    // Navega para a página protegida
-    window.location.href = "/dashboard?token=" + data.token;
-  } else {
-    errorMessage.textContent = "Falha na autenticação.";
-  }
-});
+      } catch (err) {
+        console.error("Erro ao carregar inscrições:", err);
+        document.getElementById("conteudo-inscricoes").textContent = "Erro ao carregar inscrições.";
+      }
+    }
 
+    // Ao carregar a página, autenticar admin e mostrar aba inicial
+    window.onload = carregarAdmin;
 
-</script>
-
+  </script>
 </body>
 </html>

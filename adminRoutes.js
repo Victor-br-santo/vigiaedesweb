@@ -41,6 +41,13 @@ app.post("/admin/login", (req, res) => {
       return res.status(401).json({ mensagem: "Senha incorreta" });
     }
 
-    res.status(200).json({ mensagem: "Login bem-sucedido!", admin: { id: admin.id, nome: admin.nome } });
+   // ✅ Gerar o token JWT
+    const token = jwt.sign({ id: admin.id, email: admin.email }, segredoJWT, { expiresIn: "2h" });
+
+    res.status(200).json({
+      mensagem: "Login bem-sucedido!",
+      admin: { id: admin.id, nome: admin.nome },
+      token, // ⬅️ Retornando o token para o front-end salvar
   });
+});
 });

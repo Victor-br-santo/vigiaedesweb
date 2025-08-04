@@ -4,6 +4,7 @@ const path = require("path");
 const fs = require("fs");
 const inscricaoRoutes = require('./routes/inscricao');
 
+
 const app = express();
 const router = express.Router();
 
@@ -12,6 +13,7 @@ app.set('views', path.join(__dirname, 'views'));
 
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
+const segredoJWT = process.env.JWT_SECRET || "seusegredoaqui";
 const pool = require("./db");
 require('dotenv').config();
 
