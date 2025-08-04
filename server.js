@@ -68,10 +68,16 @@ pool.query('SELECT NOW()', (err, res) => {
   }
 });
 
-// Rota protegida para o dashboard
-app.get("/dashboard", autenticarToken, (req, res) => {
-  res.render("dashboard", { admin: req.admin });
+app.get("/api/admin-info", autenticarToken, (req, res) => {
+  // Retorna dados do admin extraídos do token
+  res.json({ id: req.admin.id, email: req.admin.email });
 });
+
+
+// // Rota protegida para o dashboard
+// app.get("/dashboard", autenticarToken, (req, res) => {
+//   res.render("dashboard", { admin: req.admin });
+// });
 
 // Rota GET para buscar usuários no banco
 app.get("/usuarios", (req, res) => {

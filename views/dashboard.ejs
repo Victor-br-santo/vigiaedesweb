@@ -158,6 +158,37 @@ form.addEventListener("submit", async (e) => {
     alert("Erro na conexão com o servidor.");
   }
 });
+
+async function carregarAdmin() {
+  const token = localStorage.getItem("adminToken");
+  if (!token) {
+    alert("Você não está logado!");
+    window.location.href = "/painel/login";
+    return;
+  }
+
+  try {
+    const res = await fetch("/api/admin-info", {
+      headers: {
+        Authorization: "Bearer " + token
+      }
+    });
+
+    if (!res.ok) throw new Error("Token inválido ou expirado");
+
+    const admin = await res.json();
+    document.getElementById("nome-admin").textContent = admin.email; // Exemplo
+
+  } catch (error) {
+    alert("Erro na autenticação, faça login novamente.");
+    localStorage.removeItem("adminToken");
+    window.location.href = "/painel/login";
+  }
+}
+
+// Chama essa função quando carregar a página
+window.onload = carregarAdmin;
+
 </script>
 
 </body>
