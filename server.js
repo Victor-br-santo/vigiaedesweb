@@ -26,7 +26,7 @@ app.use(express.urlencoded({ extended: true }));
 // Middleware JWT para verificar token
 function verificarToken(req, res, next) {
   console.log("Authorization header:", req.headers.authorization);
-  const authHeader = req.headers["authorization"];
+  const authHeader = req.headers["Authorization"];
   console.log("Authorization header:", authHeader);  // <<< log para debug
   const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
 
