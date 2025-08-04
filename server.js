@@ -3,6 +3,8 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const inscricaoRoutes = require('./routes/inscricao');
+const token = req.headers["authorization"];
+
 
 const app = express();
 const router = express.Router();
@@ -205,28 +207,30 @@ function autenticarToken(req, res, next) {
   });
 }
 
-// Rota protegida para renderizar o dashboard
-app.get("/dashboard", verificarToken, (req, res) => {
-  res.render("dashboard", { nome: req.admin.nome }); // opcional passar nome
+app.get("/dashboard", (req, res) => {
+  res.sendFile(path.join(__dirname, "public/dashboard/index.html"));
 });
 
+app.post("/admin/verificar", verificarToken, (req, res) => {
+  res.status(200).json({ mensagem: "Token válido", nome: req.user.nome });
+});
 
-// Middleware de autenticação
-function verificarToken(req, res, next) {
-  const token = req.headers.authorization?.split(" ")[1]; // Bearer TOKEN
+// // Middleware de autenticação
+// function verificarToken(req, res, next) {
+//   const token = req.headers.authorization?.split(" ")[1]; // Bearer TOKEN
 
-  if (!token) {
-    return res.status(401).send("Token não fornecido");
-  }
+//   if (!token) {
+//     return res.status(401).send("Token não fornecido");
+//   }
 
-  try {
-    const decoded = jwt.verify(token, process.env.JWT_SECRET);
-    req.admin = decoded;
-    next();
-  } catch (err) {
-    return res.status(403).send("Token inválido");
-  }
-}
+//   try {
+//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
+//     req.admin = decoded;
+//     next();
+//   } catch (err) {
+//     return res.status(403).send("Token inválido");
+//   }
+// }
 
 
 

@@ -5,6 +5,42 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Dashboard - VigiaAedes</title>
   <link rel="stylesheet" href="../public/css/Dashstyle.css" />
+
+  <script>
+  (async () => {
+    const token = localStorage.getItem("adminToken");
+
+    if (!token) {
+      // Redireciona se não houver token
+      window.location.href = "/painel/login";
+      return;
+    }
+
+    try {
+      const response = await fetch("/admin/verificar", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: token,
+        },
+      });
+
+      if (!response.ok) {
+        // Token inválido, redireciona para login
+        window.location.href = "/painel/login";
+      }
+
+      // Se quiser, você pode mostrar o nome do admin:
+      // const data = await response.json();
+      // document.getElementById("nomeAdmin").textContent = data.nome;
+
+    } catch (err) {
+      // Erro na verificação, redireciona
+      window.location.href = "/painel/login";
+    }
+  })();
+</script>
+
 </head>
 <body>
   <div class="dashboard-container">
