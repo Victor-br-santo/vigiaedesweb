@@ -70,7 +70,7 @@ pool.query('SELECT NOW()', (err, res) => {
   }
 });
 
-app.get("/api/admin-info", autenticarToken, (req, res) => {
+app.get("/api/admin-info", verificarToken, (req, res) => {
   // Retorna dados do admin extraídos do token
   res.json({ id: req.admin.id, email: req.admin.email });
 });
@@ -194,6 +194,7 @@ app.post("/admin/login", async (req, res) => {
     res.status(500).json({ mensagem: "Erro no login" });
   }
 });
+
 // Middleware simples para verificar token JWT
 function autenticarToken(req, res, next) {
   const token = req.headers.authorization?.split(' ')[1]; // Espera: Authorization: Bearer <token>
