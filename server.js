@@ -11,6 +11,10 @@ const router = express.Router();
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
+app.post("/admin/verificar", verificarToken, (req, res) => {
+  res.status(200).json({ mensagem: "Token válido", nome: req.admin.email });
+});
+
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const segredoJWT = process.env.JWT_SECRET || "seusegredoaqui";
@@ -232,10 +236,6 @@ function verificarToken(req, res, next) {
     next();
   });
 }
-
-app.post("/admin/verificar", verificarToken, (req, res) => {
-  res.status(200).json({ mensagem: "Token válido", nome: req.admin.email });
-});
 
 // // Middleware de autenticação
 // function verificarToken(req, res, next) {
