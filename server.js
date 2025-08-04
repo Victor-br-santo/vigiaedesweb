@@ -101,9 +101,10 @@ app.get("/api/admin-info", verificarToken, (req, res) => {
 });
 
 // Dashboard protegido
-app.get("/dashboard", verificarToken, (req, res) => {
+app.get("/dashboard", (req, res) => {
   res.sendFile(path.join(__dirname, "public/dashboard/index.html"));
 });
+
 
 // Rota para buscar usuários
 app.get("/usuarios", (req, res) => {
