@@ -3,7 +3,7 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const inscricaoRoutes = require('./routes/inscricao');
-const token = req.headers["authorization"];
+
 
 
 const app = express();
@@ -212,6 +212,7 @@ app.get("/dashboard", (req, res) => {
 });
 
 app.post("/admin/verificar", verificarToken, (req, res) => {
+  const token = req.headers["authorization"];
   res.status(200).json({ mensagem: "Token válido", nome: req.user.nome });
 });
 
