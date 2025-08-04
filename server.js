@@ -211,8 +211,6 @@ app.get("/dashboard", verificarToken, (req, res) => {
 });
 
 
-const jwt = require("jsonwebtoken");
-
 // Middleware de autenticação
 function verificarToken(req, res, next) {
   const token = req.headers.authorization?.split(" ")[1]; // Bearer TOKEN
