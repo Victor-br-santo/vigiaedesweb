@@ -4,8 +4,6 @@ const path = require("path");
 const fs = require("fs");
 const inscricaoRoutes = require('./routes/inscricao');
 
-
-
 const app = express();
 const router = express.Router();
 
@@ -82,6 +80,7 @@ app.get("/api/admin-info", autenticarToken, (req, res) => {
 // });
 
 // Rota GET para buscar usuários no banco
+
 app.get("/usuarios", (req, res) => {
   const query = "SELECT * FROM usuarios";  // Query para pegar todos os usuários
 
@@ -207,14 +206,36 @@ function autenticarToken(req, res, next) {
   });
 }
 
-app.get("/dashboard", (req, res) => {
+app.get("/dashboard", verificarToken, (req, res) => {
   res.sendFile(path.join(__dirname, "public/dashboard/index.html"));
 });
 
+
+
+function verificarToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
+
+  if (!token) {
+    return res.status(401).json({ erro: "Token não fornecido" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ erro: "Token inválido" });
+    }
+
+    req.admin = decoded; // salvar dados do admin no req
+    next();
+  });
+}
+
 app.post("/admin/verificar", verificarToken, (req, res) => {
-  const token = req.headers["authorization"];
-  res.status(200).json({ mensagem: "Token válido", nome: req.user.nome });
+  res.status(200).json({ mensagem: "Token válido", nome: req.admin.email });
 });
+
+localStorage.setItem("adminToken", data.token);
+window.location.href = "/dashboard";
 
 // // Middleware de autenticação
 // function verificarToken(req, res, next) {
