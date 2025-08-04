@@ -189,6 +189,22 @@ async function carregarAdmin() {
 // Chama essa função quando carregar a página
 window.onload = carregarAdmin;
 
+fetch("/dashboard", {
+  method: "GET",
+  headers: {
+    Authorization: `Bearer ${data.token}`,
+  },
+})
+.then((res) => {
+  if (res.ok) {
+    // Navega para a página protegida
+    window.location.href = "/dashboard?token=" + data.token;
+  } else {
+    errorMessage.textContent = "Falha na autenticação.";
+  }
+});
+
+
 </script>
 
 </body>
