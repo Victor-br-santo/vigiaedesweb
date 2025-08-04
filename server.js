@@ -34,11 +34,22 @@ const emailUser = process.env.EMAIL_USER;
 const emailPass = process.env.EMAIL_PASS;
 const emailTo = process.env.EMAIL_TO;
 
-function verificarLogin(req, res, next) {
-  // Aqui você pode checar se o admin está logado.
-  // No futuro vamos integrar isso com sessões ou JWT
-  // Por enquanto, para testes, vamos deixar sempre passar:
-  next();
+function verificarToken(req, res, next) {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
+
+  if (!token) {
+    return res.status(401).json({ erro: "Token não fornecido" });
+  }
+
+  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+    if (err) {
+      return res.status(403).json({ erro: "Token inválido" });
+    }
+
+    req.admin = decoded; // salvar dados do admin no req
+    next();
+  });
 }
 
 // server.js ou routes/admin.js
@@ -218,42 +229,6 @@ app.get("/dashboard", verificarToken, (req, res) => {
   res.sendFile(path.join(__dirname, "public/dashboard/index.html"));
 });
 
-
-
-function verificarToken(req, res, next) {
-  const authHeader = req.headers["authorization"];
-  const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
-
-  if (!token) {
-    return res.status(401).json({ erro: "Token não fornecido" });
-  }
-
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) {
-      return res.status(403).json({ erro: "Token inválido" });
-    }
-
-    req.admin = decoded; // salvar dados do admin no req
-    next();
-  });
-}
-
-// // Middleware de autenticação
-// function verificarToken(req, res, next) {
-//   const token = req.headers.authorization?.split(" ")[1]; // Bearer TOKEN
-
-//   if (!token) {
-//     return res.status(401).send("Token não fornecido");
-//   }
-
-//   try {
-//     const decoded = jwt.verify(token, process.env.JWT_SECRET);
-//     req.admin = decoded;
-//     next();
-//   } catch (err) {
-//     return res.status(403).send("Token inválido");
-//   }
-// }
 
 
 

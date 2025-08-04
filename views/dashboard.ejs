@@ -87,37 +87,46 @@
       window.location.href = "/painel/login";
     }
 
-    // Carregar dados do admin usando token JWT
-    async function carregarAdmin() {
-      const token = localStorage.getItem("adminToken");
-      if (!token) {
-        alert("Você não está logado!");
-        logout();
-        return;
-      }
-
-      try {
-        const res = await fetch("/admin/verificar", {
-          method: "POST",
-          headers: {
-            Authorization: "Bearer " + token
-          }
-        });
-
-        if (!res.ok) throw new Error("Token inválido ou expirado");
-
-        const data = await res.json();
-        const nomeAdmin = data.admin?.nome || "Administrador";
-        document.getElementById("nome-admin").textContent = nomeAdmin;
-
-        // Após validar admin, já mostrar a aba inicial
-        mostrarAba("inicio");
-
-      } catch (err) {
-        alert("Erro na autenticação, faça login novamente.");
-        logout();
-      }
+     // Carregar dados do admin usando token JWT
+  async function carregarAdmin() {
+    const token = localStorage.getItem("adminToken");
+    if (!token) {
+      alert("Você não está logado!");
+      logout();
+      return;
     }
+
+    try {
+      const res = await fetch("/admin/verificar", {
+        method: "POST",
+        headers: {
+          Authorization: "Bearer " + token
+        }
+      });
+
+      if (!res.ok) throw new Error("Token inválido ou expirado");
+
+      const data = await res.json();
+
+      // Exibir nome/email do admin (ajuste conforme seu HTML)
+      document.getElementById("nomeAdmin").textContent = data.nome;
+
+    } catch (error) {
+      console.error("Erro ao verificar token:", error);
+      alert("Sessão expirada. Faça login novamente.");
+      logout();
+    }
+  }
+
+  // Função de logout (já deve existir no seu código)
+  function logout() {
+    localStorage.removeItem("adminToken");
+    window.location.href = "/painel/login";
+  }
+
+  // Chamar quando a página carregar
+  carregarAdmin();
+ 
 
     // Carregar posts protegidos
     async function carregarPosts() {
