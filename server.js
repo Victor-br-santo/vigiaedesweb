@@ -234,9 +234,6 @@ app.post("/admin/verificar", verificarToken, (req, res) => {
   res.status(200).json({ mensagem: "Token válido", nome: req.admin.email });
 });
 
-localStorage.setItem("adminToken", data.token);
-window.location.href = "/dashboard";
-
 // // Middleware de autenticação
 // function verificarToken(req, res, next) {
 //   const token = req.headers.authorization?.split(" ")[1]; // Bearer TOKEN
