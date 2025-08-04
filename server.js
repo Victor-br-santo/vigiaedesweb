@@ -196,18 +196,18 @@ app.post("/admin/login", async (req, res) => {
 });
 
 // Middleware simples para verificar token JWT
-function autenticarToken(req, res, next) {
-  const token = req.headers.authorization?.split(' ')[1]; // Espera: Authorization: Bearer <token>
+// function autenticarToken(req, res, next) {
+//   const token = req.headers.authorization?.split(' ')[1]; // Espera: Authorization: Bearer <token>
 
-  if (!token) return res.status(401).send('Token não fornecido');
+//   if (!token) return res.status(401).send('Token não fornecido');
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-    if (err) return res.status(403).send('Token inválido');
+//   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+//     if (err) return res.status(403).send('Token inválido');
 
-    req.admin = decoded; // Aqui você pode acessar req.admin.id, etc
-    next();
-  });
-}
+//     req.admin = decoded; // Aqui você pode acessar req.admin.id, etc
+//     next();
+//   });
+// }
 
 app.get("/dashboard", verificarToken, (req, res) => {
   res.sendFile(path.join(__dirname, "public/dashboard/index.html"));
