@@ -1,3 +1,5 @@
+require('dotenv').config();
+
 const express = require("express");
 const cors = require("cors");
 const path = require("path");
@@ -7,6 +9,8 @@ const inscricaoRoutes = require('./routes/inscricao');
 
 const app = express();
 const router = express.Router();
+const verificarToken = require("./middlewares/verificarToken");
+
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
@@ -19,7 +23,6 @@ const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 const segredoJWT = process.env.JWT_SECRET || "seusegredoaqui";
 const pool = require("./db");
-require('dotenv').config();
 
 const postRoutes = require("./routes/posts");
 const nodemailer = require("nodemailer");
