@@ -4,36 +4,26 @@ const express = require("express");
 const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
+const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
+const nodemailer = require("nodemailer");
+const pool = require("./db"); // sua pool do PostgreSQL
 const inscricaoRoutes = require('./routes/inscricao');
-
+const postRoutes = require("./routes/posts");
 
 const app = express();
-const router = express.Router();
 
 app.set('view engine', 'ejs');
 app.set('views', path.join(__dirname, 'views'));
 
-app.post("/admin/verificar", verificarToken, (req, res) => {
-  res.status(200).json({ mensagem: "Token válido", nome: req.admin.email });
-});
+const JWT_SECRET = process.env.JWT_SECRET || "seusegredoaqui"; // usar constante
 
-const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken");
-const segredoJWT = process.env.JWT_SECRET || "seusegredoaqui";
-const pool = require("./db");
+// Middlewares globais de parse do corpo e cors - sempre antes das rotas
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: true }));
 
-const postRoutes = require("./routes/posts");
-const nodemailer = require("nodemailer");
-
-const uploadDir = path.join(__dirname, "public/uploads");
-if (!fs.existsSync(uploadDir)) {
-  fs.mkdirSync(uploadDir, { recursive: true });
-}
-
-const emailUser = process.env.EMAIL_USER;
-const emailPass = process.env.EMAIL_PASS;
-const emailTo = process.env.EMAIL_TO;
-
+// Middleware JWT para verificar token
 function verificarToken(req, res, next) {
   const authHeader = req.headers["authorization"];
   const token = authHeader && authHeader.split(" ")[1]; // Bearer <token>
@@ -42,7 +32,7 @@ function verificarToken(req, res, next) {
     return res.status(401).json({ erro: "Token não fornecido" });
   }
 
-  jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
+  jwt.verify(token, JWT_SECRET, (err, decoded) => {
     if (err) {
       return res.status(403).json({ erro: "Token inválido" });
     }
@@ -52,8 +42,21 @@ function verificarToken(req, res, next) {
   });
 }
 
-// server.js ou routes/admin.js
-app.get('/painel/inscricoes', verificarLogin, async (req, res) => {
+// Cria pasta uploads se não existir
+const uploadDir = path.join(__dirname, "public/uploads");
+if (!fs.existsSync(uploadDir)) {
+  fs.mkdirSync(uploadDir, { recursive: true });
+}
+
+// Variáveis de ambiente para email
+const emailUser = process.env.EMAIL_USER;
+const emailPass = process.env.EMAIL_PASS;
+const emailTo = process.env.EMAIL_TO;
+
+// Rotas
+
+// Usar o middleware verificarToken corretamente
+app.get('/painel/inscricoes', verificarToken, async (req, res) => {
   try {
     const { rows } = await pool.query('SELECT * FROM inscricoes ORDER BY id DESC');
     res.render('admin/partials/inscricoes', { inscricoes: rows });
@@ -63,60 +66,63 @@ app.get('/painel/inscricoes', verificarLogin, async (req, res) => {
   }
 });
 
-app.use(express.urlencoded({ extended: true }));
-app.use(cors());
-app.use(express.json());
+// Rotas para inscrição e posts
 app.use('/inscricao', inscricaoRoutes);
+app.use(postRoutes);
 
+// Rota para arquivos estáticos e uploads
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use(express.static(path.join(__dirname, 'public')));
 
-app.use(postRoutes);
-
+// Página de login admin
 app.get('/painel/login', (req, res) => {
-  res.render('admin/login'); // vai procurar em /views/admin/login.ejs
+  res.render('admin/login');
 });
 
-// Testar a conexão com o banco logo após configurar o pool
+// Testar conexão ao banco
 pool.query('SELECT NOW()', (err, res) => {
   if (err) {
-    console.log("Erro ao conectar ao banco:", err); // Caso haja erro
+    console.log("Erro ao conectar ao banco:", err);
   } else {
-    console.log("Conexão bem-sucedida:", res.rows); // Se a conexão for bem-sucedida, exibe a data e hora do banco
+    console.log("Conexão bem-sucedida:", res.rows);
   }
 });
 
+// Rota para validar token (frontend)
+app.post("/admin/verificar", verificarToken, (req, res) => {
+  res.status(200).json({ mensagem: "Token válido", nome: req.admin.email });
+});
+
+// Rota para obter dados do admin a partir do token
 app.get("/api/admin-info", verificarToken, (req, res) => {
-  // Retorna dados do admin extraídos do token
   res.json({ id: req.admin.id, email: req.admin.email });
 });
 
+// Dashboard protegido
+app.get("/dashboard", verificarToken, (req, res) => {
+  res.sendFile(path.join(__dirname, "public/dashboard/index.html"));
+});
 
-// // Rota protegida para o dashboard
-// app.get("/dashboard", autenticarToken, (req, res) => {
-//   res.render("dashboard", { admin: req.admin });
-// });
-
-// Rota GET para buscar usuários no banco
-
+// Rota para buscar usuários
 app.get("/usuarios", (req, res) => {
-  const query = "SELECT * FROM usuarios";  // Query para pegar todos os usuários
+  const query = "SELECT * FROM usuarios";
 
-  pool.query(query, (err, results) => {  // Usando pool.query() do pg
+  pool.query(query, (err, results) => {
     if (err) {
       console.error("Erro ao buscar usuários:", err);
       return res.status(500).json({ mensagem: "Erro ao buscar usuários" });
     }
-    res.json(results.rows);  // No PostgreSQL, o resultado da consulta é em 'results.rows'
+    res.json(results.rows);
   });
 });
 
-// Rota POST para adicionar usuário ao banco
+// Rota para adicionar usuário
 app.post("/usuarios", (req, res) => {
   const { nome, email } = req.body;
-  console.log("📩 Dados recebidos do formulário:", { nome, email }); // ADICIONE ISSO PARA VER SE ESTÁ CHEGANDO NO BACKEND
-  const query = "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *";  // Usando placeholders do PostgreSQL
-  pool.query(query, [nome, email ], (err, results) => {
+  console.log("📩 Dados recebidos do formulário:", { nome, email });
+
+  const query = "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *";
+  pool.query(query, [nome, email], (err, results) => {
     if (err) {
       console.error("Erro ao inserir usuário:", err);
       return res.status(500).json({ mensagem: "Erro ao adicionar usuário" });
@@ -126,6 +132,7 @@ app.post("/usuarios", (req, res) => {
   });
 });
 
+// Rota para contato
 app.post("/contato", async (req, res) => {
   const { name, email, message } = req.body;
 
@@ -134,40 +141,32 @@ app.post("/contato", async (req, res) => {
   try {
     const result = await pool.query(query, [name, email, message]);
 
-    // Envio de e-mail
     const transporter = nodemailer.createTransport({
-      service: "gmail", // ou outro como outlook, yahoo, etc
+      service: "gmail",
       auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-      }
+        user: emailUser,
+        pass: emailPass,
+      },
     });
 
     await transporter.sendMail({
-      from: process.env.EMAIL_USER,
-      to: process.env.EMAIL_TO,
+      from: emailUser,
+      to: emailTo,
       subject: "Nova mensagem de contato",
-      text: `Nome: ${name}\nEmail: ${email}\nMensagem:\n${message}`
+      text: `Nome: ${name}\nEmail: ${email}\nMensagem:\n${message}`,
     });
 
     res.status(201).json({
       mensagem: "Mensagem enviada com sucesso!",
-      contato: result.rows[0]
+      contato: result.rows[0],
     });
-
   } catch (err) {
     console.error("Erro no envio de contato:", err);
     res.status(500).json({ mensagem: "Erro ao enviar mensagem de contato" });
   }
 });
-const PORT = process.env.PORT || 3000;
 
-app.listen(PORT, () => {
-  console.log(`Servidor rodando na porta ${PORT}`);
-});
-
-
-// Rota para registrar novo administrador
+// Rota para registrar novo admin
 app.post("/admin/registro", async (req, res) => {
   const { nome, email, senha } = req.body;
 
@@ -183,7 +182,7 @@ app.post("/admin/registro", async (req, res) => {
   }
 });
 
-// Rota para login de administrador
+// Rota para login admin
 app.post("/admin/login", async (req, res) => {
   const { email, senha } = req.body;
 
@@ -202,7 +201,7 @@ app.post("/admin/login", async (req, res) => {
       return res.status(401).json({ mensagem: "Senha incorreta" });
     }
 
-    const token = jwt.sign({ id: admin.id, email: admin.email }, process.env.JWT_SECRET, { expiresIn: "1h" });
+    const token = jwt.sign({ id: admin.id, email: admin.email }, JWT_SECRET, { expiresIn: "1h" });
 
     res.json({ mensagem: "Login bem-sucedido", token });
   } catch (err) {
@@ -211,24 +210,8 @@ app.post("/admin/login", async (req, res) => {
   }
 });
 
-// Middleware simples para verificar token JWT
-// function autenticarToken(req, res, next) {
-//   const token = req.headers.authorization?.split(' ')[1]; // Espera: Authorization: Bearer <token>
-
-//   if (!token) return res.status(401).send('Token não fornecido');
-
-//   jwt.verify(token, process.env.JWT_SECRET, (err, decoded) => {
-//     if (err) return res.status(403).send('Token inválido');
-
-//     req.admin = decoded; // Aqui você pode acessar req.admin.id, etc
-//     next();
-//   });
-// }
-
-app.get("/dashboard", verificarToken, (req, res) => {
-  res.sendFile(path.join(__dirname, "public/dashboard/index.html"));
-});
-
-
-
-
+// // Servidor
+// const PORT = process.env.PORT || 3000;
+// app.listen(PORT, () => {
+//   console.log(`Servidor rodando na porta ${PORT}`);
+// });
