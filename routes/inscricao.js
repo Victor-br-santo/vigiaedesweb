@@ -19,7 +19,7 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // --- Rota para enviar inscrição ---
-router.post('/enviar', upload.single('comprovante'), async (req, res) => {
+router.post('/', upload.single('comprovante'), async (req, res) => {
   try {
     const { nome, email, cpf, tipo } = req.body;
     const comprovante = req.file ? req.file.filename : null;
