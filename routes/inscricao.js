@@ -16,8 +16,9 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// Código Pix e número WhatsApp fixos
-const PIX_CODE = "00020126580014BR.GOV.BCB.PIX013674d33624-a4d2-4179-9691-d7ddf7dbd2d05204000053039865802BR5925Victor Bruno Sa dos Santo6009SAO PAULO62140510qdfAcwrU6i630441CE";
+// Códigos Pix diferentes
+const PIX_COMUM = "00020126580014BR.GOV.BCB.PIX013674d33624-a4d2-4179-9691-d7ddf7dbd2d0520400005303986540530.005802BR5925Victor Bruno Sa dos Santo6009SAO PAULO62140510e359lO0TKe63040B55"; // substitua com o Pix real
+const PIX_ESTUDANTE = "00020126580014BR.GOV.BCB.PIX013674d33624-a4d2-4179-9691-d7ddf7dbd2d0520400005303986540520.005802BR5925Victor Bruno Sa dos Santo6009SAO PAULO62140510rQvsWaLPmF630491B5"; // substitua com o Pix real
 const WHATSAPP_NUMBER = "5598982344089";
 
 // --- Rota para enviar inscrição ---
@@ -26,15 +27,17 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
     const { nome, email, cpf, tipo } = req.body;
     const comprovante = req.file ? req.file.filename : null;
 
+    // Inserir no banco
     await pool.query(
       'INSERT INTO inscricoes (nome, email, cpf, tipo, comprovante) VALUES ($1, $2, $3, $4, $5)',
       [nome, email, cpf, tipo, comprovante]
     );
 
-    // Gerar QR Code do Pix
+    // Escolher Pix correto
+    const PIX_CODE = tipo === 'estudante' ? PIX_ESTUDANTE : PIX_COMUM;
     const qrCodeDataURL = await QRCode.toDataURL(PIX_CODE);
 
-    // Resposta HTML com código Pix + QR Code + WhatsApp
+    // Resposta HTML
     res.send(`
       <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
       <div class="container py-5" style="max-width: 500px;">
@@ -70,7 +73,6 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
         </div>
       </div>
 
-      <script src="https://cdn.jsdelivr.net/npm/qrcode/build/qrcode.min.js"></script>
       <script>
         function copiarPix() {
           const copyText = document.getElementById("pixCode");
