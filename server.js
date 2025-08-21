@@ -133,6 +133,24 @@ app.post("/usuarios", (req, res) => {
   });
 });
 
+// Rota para marcar inscrição como paga
+app.post("/inscricao/:id/marcar-pago", async (req, res) => {
+  try {
+    const { id } = req.params;
+
+    await pool.query(
+      "UPDATE inscricoes SET status_pagamento = 'pago' WHERE id = $1",
+      [id]
+    );
+
+    res.redirect("/painel/inscricoes");
+  } catch (err) {
+    console.error("Erro ao marcar como pago:", err);
+    res.status(500).send("Erro ao marcar como pago");
+  }
+});
+
+
 // Rota de contato
 app.post("/contato", async (req, res) => {
   const { name, email, message } = req.body;
