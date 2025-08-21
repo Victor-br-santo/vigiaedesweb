@@ -133,7 +133,6 @@ app.post("/usuarios", (req, res) => {
   });
 });
 
-// Rota para marcar inscrição como paga
 app.post("/inscricao/:id/marcar-pago", async (req, res) => {
   try {
     const { id } = req.params;
@@ -145,10 +144,11 @@ app.post("/inscricao/:id/marcar-pago", async (req, res) => {
 
     res.redirect("/painel/inscricoes");
   } catch (err) {
-    console.error("Erro ao marcar como pago:", err);
-    res.status(500).send("Erro ao marcar como pago");
+    console.error("Erro ao marcar como pago:", err); // aqui vai mostrar o erro real
+    res.status(500).send("Erro ao marcar como pago: " + err.message);
   }
 });
+
 
 
 // Rota de contato
