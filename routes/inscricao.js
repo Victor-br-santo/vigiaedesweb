@@ -4,7 +4,7 @@ const multer = require('multer');
 const path = require('path');
 const pool = require('../db');
 
-// Configurar armazenamento de arquivos
+// Configuração do upload
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, 'public/uploads/');
@@ -15,9 +15,9 @@ const storage = multer.diskStorage({
     cb(null, nomeUnico);
   }
 });
-
 const upload = multer({ storage });
 
+// --- Rota para salvar inscrição ---
 router.post('/', upload.single('comprovante'), async (req, res) => {
   try {
     const { nome, email, cpf, tipo } = req.body;
@@ -41,15 +41,12 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
   }
 });
 
-module.exports = router;
-
-// Rota para listar inscrições - acesso simples e separado
+// --- Rota para listar inscrições ---
 router.get('/admin-inscricoes', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM inscricoes ORDER BY data_envio DESC');
     const inscricoes = result.rows;
 
-    // Página HTML básica para listar
     let html = `
       <h1>Lista de Inscrições</h1>
       <table border="1" cellpadding="8" cellspacing="0">
@@ -93,3 +90,5 @@ router.get('/admin-inscricoes', async (req, res) => {
     res.status(500).send('Erro ao listar inscrições.');
   }
 });
+
+module.exports = router;
