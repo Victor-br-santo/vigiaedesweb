@@ -3,6 +3,7 @@ const router = express.Router();
 const multer = require('multer');
 const path = require('path');
 const pool = require('../db');
+const QRCode = require('qrcode');
 
 // Configuração do upload
 const storage = multer.diskStorage({
@@ -17,8 +18,8 @@ const storage = multer.diskStorage({
 });
 const upload = multer({ storage });
 
-// --- Rota para salvar inscrição ---
-router.post('/', upload.single('comprovante'), async (req, res) => {
+// --- Rota para enviar inscrição ---
+router.post('/enviar', upload.single('comprovante'), async (req, res) => {
   try {
     const { nome, email, cpf, tipo } = req.body;
     const comprovante = req.file ? req.file.filename : null;
@@ -28,10 +29,16 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
       [nome, email, cpf, tipo, comprovante]
     );
 
+    // Gerar QR Code Pix (substitua pelo payload real)
+    const pixPayload = "000201..."; 
+    const qrCodeDataURL = await QRCode.toDataURL(pixPayload);
+
     res.send(`
       <div style="padding:2rem;font-family:sans-serif;">
         <h2>Inscrição recebida!</h2>
         <p>Em breve você receberá um e-mail com os dados de pagamento via Pix.</p>
+        <p>Ou pague agora escaneando o QR Code abaixo:</p>
+        <img src="${qrCodeDataURL}" alt="QR Code Pix" />
         <a href="/" style="display:inline-block;margin-top:1rem;">Voltar ao site</a>
       </div>
     `);
@@ -41,7 +48,7 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
   }
 });
 
-// --- Rota para listar inscrições ---
+// --- Rota para listar inscrições (admin) ---
 router.get('/admin-inscricoes', async (req, res) => {
   try {
     const result = await pool.query('SELECT * FROM inscricoes ORDER BY data_envio DESC');
@@ -58,7 +65,10 @@ router.get('/admin-inscricoes', async (req, res) => {
             <th>CPF</th>
             <th>Tipo</th>
             <th>Comprovante</th>
+            <th>Status</th>
+            <th>Código</th>
             <th>Data</th>
+            <th>Ação</th>
           </tr>
         </thead>
         <tbody>
@@ -73,7 +83,14 @@ router.get('/admin-inscricoes', async (req, res) => {
           <td>${inscricao.cpf}</td>
           <td>${inscricao.tipo}</td>
           <td>${inscricao.comprovante ? `<a href="/uploads/${inscricao.comprovante}" target="_blank">Ver arquivo</a>` : '—'}</td>
+          <td>${inscricao.status_pagamento || '—'}</td>
+          <td>${inscricao.codigo || '—'}</td>
           <td>${new Date(inscricao.data_envio).toLocaleString()}</td>
+          <td>
+            ${inscricao.status_pagamento === 'pago' ? '✔ Pago' : `<form method="POST" action="/inscricao/${inscricao.id}/marcar-pago">
+              <button type="submit">Marcar como pago</button>
+            </form>`}
+          </td>
         </tr>
       `;
     });
@@ -88,6 +105,25 @@ router.get('/admin-inscricoes', async (req, res) => {
   } catch (error) {
     console.error(error);
     res.status(500).send('Erro ao listar inscrições.');
+  }
+});
+
+// --- Rota para marcar inscrição como paga (admin) ---
+router.post('/:id/marcar-pago', async (req, res) => {
+  const { id } = req.params;
+  try {
+    const codigo = Math.random().toString(36).substring(2, 8).toUpperCase(); // gera código aleatório
+    await pool.query(
+      'UPDATE inscricoes SET status_pagamento=$1, codigo=$2 WHERE id=$3',
+      ['pago', codigo, id]
+    );
+
+    // Aqui você pode enviar email ou WhatsApp com o código
+
+    res.redirect('/inscricao/admin-inscricoes');
+  } catch (err) {
+    console.error(err);
+    res.status(500).send('Erro ao marcar inscrição como paga.');
   }
 });
 
