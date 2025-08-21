@@ -5,36 +5,12 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Login / Cadastro ADM</title>
   <style>
-    body {
-      font-family: sans-serif;
-      background: #f4f4f4;
-      padding: 2rem;
-    }
-    .container {
-      max-width: 400px;
-      margin: auto;
-      background: white;
-      padding: 2rem;
-      border-radius: 8px;
-      box-shadow: 0 0 10px rgba(0,0,0,0.1);
-    }
-    h2 {
-      text-align: center;
-    }
-    input, button {
-      width: 100%;
-      padding: 10px;
-      margin: 0.5rem 0;
-    }
-    .toggle {
-      text-align: center;
-      margin-top: 1rem;
-    }
-    .success, .error {
-      text-align: center;
-      margin: 1rem 0;
-      font-weight: bold;
-    }
+    body { font-family: sans-serif; background: #f4f4f4; padding: 2rem; }
+    .container { max-width: 400px; margin: auto; background: white; padding: 2rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    h2 { text-align: center; }
+    input, button { width: 100%; padding: 10px; margin: 0.5rem 0; }
+    .toggle { text-align: center; margin-top: 1rem; }
+    .success, .error { text-align: center; margin: 1rem 0; font-weight: bold; }
     .success { color: green; }
     .error { color: red; }
   </style>
@@ -87,6 +63,7 @@
           method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify(payload),
+          credentials: "include" // importante: envia cookies automaticamente
         });
 
         const data = await response.json();
@@ -121,7 +98,6 @@
       nomeField.style.display = isLogin ? "none" : "block";
       document.getElementById("nome").value = "";
 
-      // Recoloca listener no novo link
       setTimeout(() => {
         document.getElementById("toggleLink").addEventListener("click", (e) => {
           e.preventDefault();
@@ -131,7 +107,6 @@
       }, 0);
     }
 
-    // Listener inicial
     document.getElementById("toggleLink").addEventListener("click", (e) => {
       e.preventDefault();
       isLogin = !isLogin;
