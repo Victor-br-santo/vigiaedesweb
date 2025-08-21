@@ -133,21 +133,49 @@ app.post("/usuarios", (req, res) => {
   });
 });
 
+const crypto = require("crypto");
+
 app.post("/inscricao/:id/marcar-pago", async (req, res) => {
   try {
     const { id } = req.params;
 
+    // gerar código único (6 dígitos aleatórios)
+    const codigoVerificacao = crypto.randomBytes(3).toString("hex").toUpperCase();
+
+    // atualizar status e salvar código
     await pool.query(
-      "UPDATE inscricoes SET status_pagamento = 'pago' WHERE id = $1",
-      [id]
+      "UPDATE inscricoes SET status_pagamento = 'pago', codigo_verificacao = $1 WHERE id = $2",
+      [codigoVerificacao, id]
     );
+
+    // buscar dados do inscrito (nome e e-mail)
+    const { rows } = await pool.query("SELECT nome, email FROM inscricoes WHERE id = $1", [id]);
+    const inscrito = rows[0];
+
+    if (inscrito) {
+      // enviar e-mail
+      await transporter.sendMail({
+        from: process.env.EMAIL_USER,
+        to: inscrito.email,
+        subject: "Confirmação de Inscrição - Capacitação",
+        html: `
+          <h2>Olá, ${inscrito.nome}!</h2>
+          <p>Parabéns 🎉 Sua inscrição foi confirmada com sucesso!</p>
+          <p><b>Seu código de verificação é:</b></p>
+          <h1 style="color:#2c3e50;">${codigoVerificacao}</h1>
+          <p>Guarde este código e apresente no dia do evento.</p>
+          <p>Atenciosamente,<br>Equipe da Capacitação</p>
+        `
+      });
+    }
 
     res.redirect("/painel/inscricoes");
   } catch (err) {
-    console.error("Erro ao marcar como pago:", err); // aqui vai mostrar o erro real
+    console.error("Erro ao marcar como pago:", err);
     res.status(500).send("Erro ao marcar como pago: " + err.message);
   }
 });
+
 
 
 
