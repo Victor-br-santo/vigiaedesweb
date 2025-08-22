@@ -6,10 +6,10 @@ const path = require("path");
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken"); // pode deixar caso queira usar no futuro
-const pool = require("./db"); // sua pool do PostgreSQL
+const pool = require("./db");
 const inscricaoRoutes = require('./routes/inscricao');
 const postRoutes = require("./routes/posts");
-const { sendMail } = require("./mailer"); // import do mailer centralizado
+const { sendMail } = require("./mailer");
 const crypto = require("crypto");
 
 const app = express();
@@ -34,7 +34,26 @@ if (!fs.existsSync(uploadDir)) {
 const emailUser = process.env.EMAIL_USER;
 const emailTo = process.env.EMAIL_TO;
 
+// ----------------------
+// Funções de validação
+// ----------------------
+function validarEmail(email) {
+  const regex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  return regex.test(email);
+}
+
+function validarCPF(cpf) {
+  const regex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
+  return regex.test(cpf);
+}
+
+function validarCampo(valor) {
+  return valor && valor.trim() !== "";
+}
+
+// ----------------------
 // Rotas de inscrição e posts
+// ----------------------
 app.use('/inscricao', inscricaoRoutes);
 app.use(postRoutes);
 
@@ -49,12 +68,19 @@ app.get('/painel/login', (req, res) => {
 
 // Dashboard sem necessidade de token
 app.get("/dashboard", (req, res) => {
-  res.sendFile(path.join(__dirname, "public/dashboard.html")); // ou .ejs se preferir
+  res.sendFile(path.join(__dirname, "public/dashboard.html"));
 });
 
 // Rota para registrar novo admin
 app.post("/admin/registro", async (req, res) => {
   const { nome, email, senha } = req.body;
+
+  if (!validarCampo(nome) || !validarCampo(email) || !validarCampo(senha)) {
+    return res.status(400).json({ mensagem: "Todos os campos são obrigatórios" });
+  }
+  if (!validarEmail(email)) {
+    return res.status(400).json({ mensagem: "Email inválido" });
+  }
 
   try {
     const hashedPassword = await bcrypt.hash(senha, 10);
@@ -72,6 +98,10 @@ app.post("/admin/registro", async (req, res) => {
 app.post("/admin/login", async (req, res) => {
   const { email, senha } = req.body;
 
+  if (!validarCampo(email) || !validarCampo(senha)) {
+    return res.status(400).json({ mensagem: "Email e senha são obrigatórios" });
+  }
+
   try {
     const query = "SELECT * FROM admins WHERE email = $1";
     const result = await pool.query(query, [email]);
@@ -87,7 +117,6 @@ app.post("/admin/login", async (req, res) => {
       return res.status(401).json({ mensagem: "Senha incorreta" });
     }
 
-    // Login bem-sucedido: apenas envia mensagem
     res.json({ mensagem: "Login bem-sucedido" });
   } catch (err) {
     console.error("Erro no login de admin:", err);
@@ -122,6 +151,13 @@ app.get("/usuarios", (req, res) => {
 app.post("/usuarios", (req, res) => {
   const { nome, email } = req.body;
   console.log("📩 Dados recebidos do formulário:", { nome, email });
+
+  if (!validarCampo(nome) || !validarCampo(email)) {
+    return res.status(400).json({ mensagem: "Nome e email são obrigatórios" });
+  }
+  if (!validarEmail(email)) {
+    return res.status(400).json({ mensagem: "Email inválido" });
+  }
 
   const query = "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *";
   pool.query(query, [nome, email], (err, results) => {
@@ -179,6 +215,14 @@ app.post("/inscricao/:id/marcar-pago", async (req, res) => {
 // Rota de contato
 app.post("/contato", async (req, res) => {
   const { name, email, message } = req.body;
+
+  if (!validarCampo(name) || !validarCampo(email) || !validarCampo(message)) {
+    return res.status(400).json({ mensagem: "Todos os campos são obrigatórios" });
+  }
+
+  if (!validarEmail(email)) {
+    return res.status(400).json({ mensagem: "Email inválido" });
+  }
 
   const query = "INSERT INTO contatos (nome, email, mensagem) VALUES ($1, $2, $3) RETURNING *";
 
