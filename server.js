@@ -5,7 +5,7 @@ const cors = require("cors");
 const path = require("path");
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
-const jwt = require("jsonwebtoken"); // pode deixar caso queira usar no futuro
+const jwt = require("jsonwebtoken");
 const pool = require("./db");
 const inscricaoRoutes = require('./routes/inscricao');
 const postRoutes = require("./routes/posts");
@@ -43,8 +43,33 @@ function validarEmail(email) {
 }
 
 function validarCPF(cpf) {
-  const regex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/;
+  const regex = /^\d{3}\.\d{3}\.\d{3}\-\d{2}$/; // formato 000.000.000-00
   return regex.test(cpf);
+}
+
+function validarCPFReal(cpf) {
+  cpf = cpf.replace(/[^\d]+/g, '');
+  if (cpf.length !== 11 || /^(\d)\1+$/.test(cpf)) return false;
+
+  let soma = 0;
+  let resto;
+
+  for (let i = 1; i <= 9; i++) {
+    soma += parseInt(cpf[i - 1]) * (11 - i);
+  }
+  resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf[9])) return false;
+
+  soma = 0;
+  for (let i = 1; i <= 10; i++) {
+    soma += parseInt(cpf[i - 1]) * (12 - i);
+  }
+  resto = (soma * 10) % 11;
+  if (resto === 10 || resto === 11) resto = 0;
+  if (resto !== parseInt(cpf[10])) return false;
+
+  return true;
 }
 
 function validarCampo(valor) {
@@ -57,7 +82,6 @@ function validarCampo(valor) {
 app.use('/inscricao', inscricaoRoutes);
 app.use(postRoutes);
 
-// Rotas de arquivos estáticos e uploads
 app.use('/uploads', express.static(path.join(__dirname, 'public/uploads')));
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -78,9 +102,7 @@ app.post("/admin/registro", async (req, res) => {
   if (!validarCampo(nome) || !validarCampo(email) || !validarCampo(senha)) {
     return res.status(400).json({ mensagem: "Todos os campos são obrigatórios" });
   }
-  if (!validarEmail(email)) {
-    return res.status(400).json({ mensagem: "Email inválido" });
-  }
+  if (!validarEmail(email)) return res.status(400).json({ mensagem: "Email inválido" });
 
   try {
     const hashedPassword = await bcrypt.hash(senha, 10);
@@ -106,16 +128,12 @@ app.post("/admin/login", async (req, res) => {
     const query = "SELECT * FROM admins WHERE email = $1";
     const result = await pool.query(query, [email]);
 
-    if (result.rows.length === 0) {
-      return res.status(401).json({ mensagem: "Administrador não encontrado" });
-    }
+    if (result.rows.length === 0) return res.status(401).json({ mensagem: "Administrador não encontrado" });
 
     const admin = result.rows[0];
     const senhaValida = await bcrypt.compare(senha, admin.senha);
 
-    if (!senhaValida) {
-      return res.status(401).json({ mensagem: "Senha incorreta" });
-    }
+    if (!senhaValida) return res.status(401).json({ mensagem: "Senha incorreta" });
 
     res.json({ mensagem: "Login bem-sucedido" });
   } catch (err) {
@@ -150,21 +168,13 @@ app.get("/usuarios", (req, res) => {
 // Rota para adicionar usuário
 app.post("/usuarios", (req, res) => {
   const { nome, email } = req.body;
-  console.log("📩 Dados recebidos do formulário:", { nome, email });
 
-  if (!validarCampo(nome) || !validarCampo(email)) {
-    return res.status(400).json({ mensagem: "Nome e email são obrigatórios" });
-  }
-  if (!validarEmail(email)) {
-    return res.status(400).json({ mensagem: "Email inválido" });
-  }
+  if (!validarCampo(nome) || !validarCampo(email)) return res.status(400).json({ mensagem: "Nome e email são obrigatórios" });
+  if (!validarEmail(email)) return res.status(400).json({ mensagem: "Email inválido" });
 
   const query = "INSERT INTO usuarios (nome, email) VALUES ($1, $2) RETURNING *";
   pool.query(query, [nome, email], (err, results) => {
-    if (err) {
-      console.error("Erro ao inserir usuário:", err);
-      return res.status(500).json({ mensagem: "Erro ao adicionar usuário" });
-    }
+    if (err) return res.status(500).json({ mensagem: "Erro ao adicionar usuário" });
     res.status(201).json({ mensagem: "Usuário adicionado com sucesso!", usuario: results.rows[0] });
   });
 });
@@ -173,22 +183,17 @@ app.post("/usuarios", (req, res) => {
 app.post("/inscricao/:id/marcar-pago", async (req, res) => {
   try {
     const { id } = req.params;
-
-    // gerar código único (6 dígitos aleatórios)
     const codigoVerificacao = crypto.randomBytes(3).toString("hex").toUpperCase();
 
-    // atualizar status e salvar código
     await pool.query(
       "UPDATE inscricoes SET status_pagamento = 'pago', codigo_verificacao = $1 WHERE id = $2",
       [codigoVerificacao, id]
     );
 
-    // buscar dados do inscrito (nome e e-mail)
     const { rows } = await pool.query("SELECT nome, email FROM inscricoes WHERE id = $1", [id]);
     const inscrito = rows[0];
 
     if (inscrito) {
-      // enviar e-mail usando mailer centralizado
       await sendMail({
         to: inscrito.email,
         subject: "Confirmação de Inscrição - Capacitação",
@@ -203,9 +208,7 @@ app.post("/inscricao/:id/marcar-pago", async (req, res) => {
       });
     }
 
-    // Retorna mensagem para o admin
     res.json({ success: true, message: "E-mail enviado com sucesso com o código do inscrito!" });
-
   } catch (err) {
     console.error("Erro ao marcar como pago:", err);
     res.status(500).json({ error: "Erro ao marcar como pago: " + err.message });
@@ -219,27 +222,17 @@ app.post("/contato", async (req, res) => {
   if (!validarCampo(name) || !validarCampo(email) || !validarCampo(message)) {
     return res.status(400).json({ mensagem: "Todos os campos são obrigatórios" });
   }
-
-  if (!validarEmail(email)) {
-    return res.status(400).json({ mensagem: "Email inválido" });
-  }
+  if (!validarEmail(email)) return res.status(400).json({ mensagem: "Email inválido" });
 
   const query = "INSERT INTO contatos (nome, email, mensagem) VALUES ($1, $2, $3) RETURNING *";
-
   try {
     const result = await pool.query(query, [name, email, message]);
-
-    // envia e-mail usando mailer centralizado
     await sendMail({
       to: emailTo,
       subject: "Nova mensagem de contato",
       text: `Nome: ${name}\nEmail: ${email}\nMensagem:\n${message}`,
     });
-
-    res.status(201).json({
-      mensagem: "Mensagem enviada com sucesso!",
-      contato: result.rows[0],
-    });
+    res.status(201).json({ mensagem: "Mensagem enviada com sucesso!", contato: result.rows[0] });
   } catch (err) {
     console.error("Erro no envio de contato:", err);
     res.status(500).json({ mensagem: "Erro ao enviar mensagem de contato" });
@@ -248,11 +241,8 @@ app.post("/contato", async (req, res) => {
 
 // Testar conexão ao banco
 pool.query('SELECT NOW()', (err, res) => {
-  if (err) {
-    console.log("Erro ao conectar ao banco:", err);
-  } else {
-    console.log("Conexão bem-sucedida:", res.rows);
-  }
+  if (err) console.log("Erro ao conectar ao banco:", err);
+  else console.log("Conexão bem-sucedida:", res.rows);
 });
 
 // Servidor
