@@ -6,10 +6,11 @@ const path = require("path");
 const fs = require("fs");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken"); // pode deixar caso queira usar no futuro
-const nodemailer = require("nodemailer");
 const pool = require("./db"); // sua pool do PostgreSQL
 const inscricaoRoutes = require('./routes/inscricao');
 const postRoutes = require("./routes/posts");
+const { sendMail } = require("./mailer"); // import do mailer centralizado
+const crypto = require("crypto");
 
 const app = express();
 const cookieParser = require('cookie-parser');
@@ -31,7 +32,6 @@ if (!fs.existsSync(uploadDir)) {
 
 // Variáveis de ambiente para email
 const emailUser = process.env.EMAIL_USER;
-const emailPass = process.env.EMAIL_PASS;
 const emailTo = process.env.EMAIL_TO;
 
 // Rotas de inscrição e posts
@@ -133,8 +133,7 @@ app.post("/usuarios", (req, res) => {
   });
 });
 
-const crypto = require("crypto");
-
+// Rota para marcar inscrição como paga e enviar e-mail
 app.post("/inscricao/:id/marcar-pago", async (req, res) => {
   try {
     const { id } = req.params;
@@ -153,9 +152,8 @@ app.post("/inscricao/:id/marcar-pago", async (req, res) => {
     const inscrito = rows[0];
 
     if (inscrito) {
-      // enviar e-mail
-      await transporter.sendMail({
-        from: process.env.EMAIL_USER,
+      // enviar e-mail usando mailer centralizado
+      await sendMail({
         to: inscrito.email,
         subject: "Confirmação de Inscrição - Capacitação",
         html: `
@@ -169,15 +167,14 @@ app.post("/inscricao/:id/marcar-pago", async (req, res) => {
       });
     }
 
-    res.redirect("/painel/inscricoes");
+    // Retorna mensagem para o admin
+    res.json({ success: true, message: "E-mail enviado com sucesso com o código do inscrito!" });
+
   } catch (err) {
     console.error("Erro ao marcar como pago:", err);
-    res.status(500).send("Erro ao marcar como pago: " + err.message);
+    res.status(500).json({ error: "Erro ao marcar como pago: " + err.message });
   }
 });
-
-
-
 
 // Rota de contato
 app.post("/contato", async (req, res) => {
@@ -188,16 +185,8 @@ app.post("/contato", async (req, res) => {
   try {
     const result = await pool.query(query, [name, email, message]);
 
-    const transporter = nodemailer.createTransport({
-      service: "gmail",
-      auth: {
-        user: emailUser,
-        pass: emailPass,
-      },
-    });
-
-    await transporter.sendMail({
-      from: emailUser,
+    // envia e-mail usando mailer centralizado
+    await sendMail({
       to: emailTo,
       subject: "Nova mensagem de contato",
       text: `Nome: ${name}\nEmail: ${email}\nMensagem:\n${message}`,
