@@ -131,7 +131,7 @@ app.post("/inscricao/:id/marcar-pago", async (req, res) => {
           <p><b>Seu código de verificação é:</b></p>
           <h1 style="color:#2c3e50;">${codigoVerificacao}</h1>
           <p>Guarde este código e apresente no dia do evento.</p>
-          <p>Atenciosamente,<br>Equipe da Capacitação</p>
+          <p>Atenciosamente,<br>Equipe Vigia</p>
         `
       });
     }
