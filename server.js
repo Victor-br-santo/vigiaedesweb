@@ -10,9 +10,10 @@ const { Pool } = require("pg");
 const multer = require("multer");
 const crypto = require("crypto");
 const cloudinary = require("cloudinary").v2;
+const QRCode = require("qrcode");
+const cookieParser = require("cookie-parser");
 
 const app = express();
-const cookieParser = require("cookie-parser");
 app.use(cookieParser());
 
 // Configuração do PostgreSQL
@@ -159,7 +160,12 @@ app.post("/contato", async (req, res) => {
   }
 });
 
-// Inscrição com upload de comprovante
+// PIX códigos fixos
+const PIX_COMUM = process.env.PIX_COMUM;
+const PIX_ESTUDANTE = process.env.PIX_ESTUDANTE;
+const WHATSAPP_NUMBER = process.env.WHATSAPP_NUMBER || "5598982344089";
+
+// Inscrição com upload de comprovante e redirecionamento para pagamento
 app.post("/inscricao", upload.single("comprovante"), async (req, res) => {
   const { nome, email, cpf, tipo } = req.body;
   let comprovanteUrl = null;
@@ -171,14 +177,29 @@ app.post("/inscricao", upload.single("comprovante"), async (req, res) => {
       comprovanteUrl = result.secure_url;
       fs.unlinkSync(req.file.path);
     }
-    await pool.query(
-      "INSERT INTO inscricoes (nome,email,cpf,tipo,comprovante_url) VALUES ($1,$2,$3,$4,$5)",
+
+    const insertResult = await pool.query(
+      "INSERT INTO inscricoes (nome,email,cpf,tipo,comprovante_url,status_pagamento) VALUES ($1,$2,$3,$4,$5,'pendente') RETURNING *",
       [nome, email, cpf, tipo, comprovanteUrl]
     );
-    res.status(200).json({ mensagem: "Inscrição realizada com sucesso!", url: comprovanteUrl });
+
+    const inscricao = insertResult.rows[0];
+
+    // Escolher Pix correto
+    const PIX_CODE = tipo === "estudante" ? PIX_ESTUDANTE : PIX_COMUM;
+    const qrCodeDataURL = await QRCode.toDataURL(PIX_CODE);
+
+    // Renderizar a tela de pagamento (views/inscricao.ejs)
+    res.render("inscricao", {
+      inscricao,
+      pixCode: PIX_CODE,
+      qrCode: qrCodeDataURL,
+      whatsapp: WHATSAPP_NUMBER
+    });
+
   } catch (err) {
     console.error("Erro na inscrição:", err);
-    res.status(500).json({ mensagem: "Erro ao processar inscrição." });
+    res.status(500).send("Erro ao processar inscrição.");
   }
 });
 
