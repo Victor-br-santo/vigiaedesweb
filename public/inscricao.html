@@ -7,27 +7,53 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <style>
     body {
-      background-color: #f5f5f5;
+      background-color: #e6f0fa;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
     }
     .form-container {
-      max-width: 500px;
-      margin: auto;
-      padding: 2rem;
-      background: #fff;
-      border-radius: 12px;
-      box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+      max-width: 600px;
+      margin: 3rem auto;
+      padding: 2.5rem;
+      background: #0d1b3d;
+      color: #fff;
+      border-radius: 15px;
+      box-shadow: 0 10px 25px rgba(0,0,0,0.2);
     }
     h2 {
       text-align: center;
-      margin-bottom: 1.5rem;
-      color: #333;
+      margin-bottom: 2rem;
+      color: #fff;
+      font-weight: 600;
+    }
+    .form-label {
+      font-weight: 500;
+      color: #cfd8fc;
+    }
+    .form-control, .form-select {
+      border-radius: 8px;
+      border: 1px solid #b3c0f5;
+    }
+    .form-control:focus, .form-select:focus {
+      box-shadow: 0 0 5px #4d6fff;
+      border-color: #4d6fff;
     }
     .btn-primary {
       width: 100%;
       padding: 0.75rem;
       font-size: 1.1rem;
-      border-radius: 8px;
+      border-radius: 10px;
+      background-color: #4d6fff;
+      border: none;
+      transition: background-color 0.3s;
+    }
+    .btn-primary:hover {
+      background-color: #3b52cc;
+    }
+    #avisoImagem {
+      font-size: 0.9rem;
+      color: #ffcccc;
+      display: none;
+      margin-top: 5px;
     }
     @media (max-width: 576px) {
       .form-container {
@@ -43,9 +69,9 @@
   </style>
 </head>
 <body>
-  <div class="form-container mt-5">
-    <h2>Inscrição para Capacitaçã - Abordagem clínica e cuidados nas arboviroses</h2>
-    <form action="/inscricao" method="POST" enctype="multipart/form-data">
+  <div class="form-container">
+    <h2>Inscrição - Capacitação em Arboviroses</h2>
+    <form id="inscricaoForm" action="/inscricao" method="POST" enctype="multipart/form-data">
       <div class="mb-3">
         <label class="form-label">Nome completo</label>
         <input type="text" name="nome" required class="form-control" maxlength="100" placeholder="Digite seu nome completo">
@@ -71,7 +97,8 @@
 
       <div class="mb-3" id="comprovanteDiv" style="display: none;">
         <label class="form-label">Comprovante CIE ou DNE</label>
-        <input type="file" name="comprovante" accept="image/*,application/pdf" class="form-control">
+        <input type="file" name="comprovante" accept="image/*" class="form-control" id="comprovante">
+        <div id="avisoImagem">Somente imagens são permitidas para estudantes.</div>
       </div>
 
       <button type="submit" class="btn btn-primary">Enviar inscrição</button>
@@ -82,8 +109,32 @@
     function toggleComprovante() {
       const tipo = document.getElementById('tipo').value;
       const comprovanteDiv = document.getElementById('comprovanteDiv');
-      comprovanteDiv.style.display = tipo === 'estudante' ? 'block' : 'none';
+      const avisoImagem = document.getElementById('avisoImagem');
+      const comprovanteInput = document.getElementById('comprovante');
+
+      if(tipo === 'estudante') {
+        comprovanteDiv.style.display = 'block';
+        avisoImagem.style.display = 'block';
+      } else {
+        comprovanteDiv.style.display = 'none';
+        avisoImagem.style.display = 'none';
+        comprovanteInput.value = '';
+      }
     }
+
+    // Validação do arquivo
+    document.getElementById('inscricaoForm').addEventListener('submit', function(e) {
+      const tipo = document.getElementById('tipo').value;
+      const fileInput = document.getElementById('comprovante');
+      if(tipo === 'estudante' && fileInput.files.length > 0) {
+        const file = fileInput.files[0];
+        if(!file.type.startsWith('image/')) {
+          e.preventDefault();
+          alert('Erro: somente imagens são permitidas para estudantes!');
+          return false;
+        }
+      }
+    });
 
     window.onload = toggleComprovante;
   </script>
