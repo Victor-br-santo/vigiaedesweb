@@ -14,15 +14,12 @@ cloudinary.config({
   api_secret: process.env.CLOUDINARY_API_SECRET,
 });
 
-// Configuração do upload local (para quem não é estudante)
-const storage = multer.diskStorage({
-  destination: (req, file, cb) => cb(null, 'public/uploads/'),
-  filename: (req, file, cb) => {
-    const ext = path.extname(file.originalname);
-    const nomeUnico = `${Date.now()}-${Math.round(Math.random() * 1E9)}${ext}`;
-    cb(null, nomeUnico);
-  }
-});
+if (!process.env.CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.CLOUDINARY_API_SECRET) {
+  console.warn('⚠️ Variáveis do Cloudinary não estão configuradas corretamente no .env');
+}
+
+// Configuração do multer (sem salvar em pasta local)
+const storage = multer.memoryStorage(); // mantemos em memória temporária
 const upload = multer({ storage });
 
 // Códigos Pix diferentes
@@ -36,21 +33,38 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
     const { nome, email, cpf, tipo } = req.body;
     let comprovanteUrl = null;
 
-    // Se for estudante, envia direto para o Cloudinary
-    if (req.file && tipo === 'estudante') {
-      const result = await cloudinary.uploader.upload(req.file.path, {
-        folder: "vigiaedes/comprovantes",
-      });
+    // Subir para Cloudinary se houver arquivo
+    if (req.file) {
+      const buffer = req.file.buffer;
+      const uploadResult = await cloudinary.uploader.upload_stream(
+        { folder: "vigiaedes/comprovantes" },
+        (error, result) => {
+          if (error) throw error;
+          return result;
+        }
+      );
+
+      // Função utilitária para promisificar upload_stream
+      const streamUpload = (buffer) => {
+        return new Promise((resolve, reject) => {
+          const stream = cloudinary.uploader.upload_stream(
+            { folder: "vigiaedes/comprovantes" },
+            (error, result) => {
+              if (result) resolve(result);
+              else reject(error);
+            }
+          );
+          stream.end(buffer);
+        });
+      };
+
+      const result = await streamUpload(buffer);
       comprovanteUrl = result.secure_url;
-      fs.unlinkSync(req.file.path); // Remove arquivo temporário
-    } else if (req.file) {
-      // Para outros tipos, mantém o upload local
-      comprovanteUrl = req.file.filename;
     }
 
     // Inserir no banco
     await pool.query(
-      'INSERT INTO inscricoes (nome, email, cpf, tipo, comprovante) VALUES ($1, $2, $3, $4, $5)',
+      'INSERT INTO inscricoes (nome, email, cpf, tipo, comprovante_url) VALUES ($1, $2, $3, $4, $5)',
       [nome, email, cpf, tipo, comprovanteUrl]
     );
 
