@@ -118,7 +118,7 @@ app.post("/inscricao/:id/marcar-pago", async (req, res) => {
     const inscrito = rows[0];
     if (inscrito) {
       await transporter.sendMail({
-        from: `"Equipe Capacitação" <${process.env.EMAIL_USER}>`,
+        from: `"Equipe Vigiaedes" <${process.env.EMAIL_USER}>`,
         to: inscrito.email,
         subject: "Confirmação de Inscrição - Capacitação",
         html: `
@@ -127,7 +127,7 @@ app.post("/inscricao/:id/marcar-pago", async (req, res) => {
           <p><b>Seu código de verificação é:</b></p>
           <h1 style="color:#2c3e50;">${codigoVerificacao}</h1>
           <p>Guarde este código e apresente no dia do evento.</p>
-          <p>Atenciosamente,<br>Equipe da Capacitação</p>
+          <p>Atenciosamente,<br>Equipe Vigiaedes</p>
         `
       });
     }
