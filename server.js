@@ -57,10 +57,6 @@ app.use(express.static(path.join(__dirname, "public")));
 
 // ================= ROTAS ================= //
 
-// Rotas de inscrição
-const inscricaoRouter = require("./routes/inscricao"); // <- seu inscricao.js
-app.use("/inscricao", inscricaoRouter);
-
 // Login / registro admin
 app.post("/admin/registro", async (req, res) => {
   const { nome, email, senha } = req.body;
@@ -131,7 +127,7 @@ app.post("/inscricao/:id/marcar-pago", async (req, res) => {
           <p><b>Seu código de verificação é:</b></p>
           <h1 style="color:#2c3e50;">${codigoVerificacao}</h1>
           <p>Guarde este código e apresente no dia do evento.</p>
-          <p>Atenciosamente,<br>Equipe Vigia</p>
+          <p>Atenciosamente,<br>Equipe da Capacitação</p>
         `
       });
     }
@@ -162,6 +158,10 @@ app.post("/contato", async (req, res) => {
     res.status(500).json({ mensagem: "Erro ao enviar mensagem de contato" });
   }
 });
+
+// ==================== INSCRIÇÃO ==================== //
+const inscricaoRouter = require("./routes/inscricao"); // <== seu inscricao.js
+app.use("/inscricao", inscricaoRouter);
 
 // Posts com upload de imagem
 app.post("/posts", upload.single("imagem"), async (req, res) => {

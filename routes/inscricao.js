@@ -4,8 +4,17 @@ const multer = require('multer');
 const path = require('path');
 const pool = require('../db');
 const QRCode = require('qrcode');
+const fs = require('fs');
+const cloudinary = require('cloudinary').v2;
 
-// Configuração do upload
+// Configuração do Cloudinary
+cloudinary.config({
+  cloud_name: process.env.CLOUD_NAME,
+  api_key: process.env.CLOUDINARY_API_KEY,
+  api_secret: process.env.CLOUDINARY_API_SECRET,
+});
+
+// Configuração do upload local (para quem não é estudante)
 const storage = multer.diskStorage({
   destination: (req, file, cb) => cb(null, 'public/uploads/'),
   filename: (req, file, cb) => {
@@ -17,20 +26,32 @@ const storage = multer.diskStorage({
 const upload = multer({ storage });
 
 // Códigos Pix diferentes
-const PIX_COMUM = "00020126580014BR.GOV.BCB.PIX013674d33624-a4d2-4179-9691-d7ddf7dbd2d0520400005303986540530.005802BR5925Victor Bruno Sa dos Santo6009SAO PAULO62140510e359lO0TKe63040B55"; // substitua com o Pix real
-const PIX_ESTUDANTE = "00020126580014BR.GOV.BCB.PIX013674d33624-a4d2-4179-9691-d7ddf7dbd2d0520400005303986540520.005802BR5925Victor Bruno Sa dos Santo6009SAO PAULO62140510rQvsWaLPmF630491B5"; // substitua com o Pix real
+const PIX_COMUM = "00020126580014BR.GOV.BCB.PIX013674d33624-a4d2-4179-9691-d7ddf7dbd2d0520400005303986540530.005802BR5925Victor Bruno Sa dos Santo6009SAO PAULO62140510e359lO0TKe63040B55";
+const PIX_ESTUDANTE = "00020126580014BR.GOV.BCB.PIX013674d33624-a4d2-4179-9691-d7ddf7dbd2d0520400005303986540520.005802BR5925Victor Bruno Sa dos Santo6009SAO PAULO62140510rQvsWaLPmF630491B5";
 const WHATSAPP_NUMBER = "5598982344089";
 
 // --- Rota para enviar inscrição ---
 router.post('/', upload.single('comprovante'), async (req, res) => {
   try {
     const { nome, email, cpf, tipo } = req.body;
-    const comprovante = req.file ? req.file.filename : null;
+    let comprovanteUrl = null;
+
+    // Se for estudante, envia direto para o Cloudinary
+    if (req.file && tipo === 'estudante') {
+      const result = await cloudinary.uploader.upload(req.file.path, {
+        folder: "vigiaedes/comprovantes",
+      });
+      comprovanteUrl = result.secure_url;
+      fs.unlinkSync(req.file.path); // Remove arquivo temporário
+    } else if (req.file) {
+      // Para outros tipos, mantém o upload local
+      comprovanteUrl = req.file.filename;
+    }
 
     // Inserir no banco
     await pool.query(
       'INSERT INTO inscricoes (nome, email, cpf, tipo, comprovante) VALUES ($1, $2, $3, $4, $5)',
-      [nome, email, cpf, tipo, comprovante]
+      [nome, email, cpf, tipo, comprovanteUrl]
     );
 
     // Escolher Pix correto
@@ -85,7 +106,7 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
     `);
 
   } catch (err) {
-    console.error(err);
+    console.error("Erro na inscrição:", err);
     res.status(500).send('Erro ao processar a inscrição.');
   }
 });
