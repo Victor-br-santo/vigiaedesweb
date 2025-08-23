@@ -1,11 +1,10 @@
 const express = require('express');
 const router = express.Router();
 const multer = require('multer');
-const path = require('path');
 const pool = require('../db');
 const QRCode = require('qrcode');
-const fs = require('fs');
 const cloudinary = require('cloudinary').v2;
+const streamifier = require('streamifier');
 
 // Configuração do Cloudinary
 cloudinary.config({
@@ -19,7 +18,7 @@ if (!process.env.CLOUD_NAME || !process.env.CLOUDINARY_API_KEY || !process.env.C
 }
 
 // Configuração do multer (sem salvar em pasta local)
-const storage = multer.memoryStorage(); // mantemos em memória temporária
+const storage = multer.memoryStorage();
 const upload = multer({ storage });
 
 // Códigos Pix diferentes
@@ -27,39 +26,35 @@ const PIX_COMUM = "00020126580014BR.GOV.BCB.PIX013674d33624-a4d2-4179-9691-d7ddf
 const PIX_ESTUDANTE = "00020126580014BR.GOV.BCB.PIX013674d33624-a4d2-4179-9691-d7ddf7dbd2d0520400005303986540520.005802BR5925Victor Bruno Sa dos Santo6009SAO PAULO62140510rQvsWaLPmF630491B5";
 const WHATSAPP_NUMBER = "5598982344089";
 
+// Função utilitária para subir buffer para Cloudinary usando Promise
+const uploadToCloudinary = (buffer) => {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(
+      { folder: "vigiaedes/comprovantes" },
+      (error, result) => {
+        if (error) reject(error);
+        else resolve(result);
+      }
+    );
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
+};
+
 // --- Rota para enviar inscrição ---
 router.post('/', upload.single('comprovante'), async (req, res) => {
   try {
     const { nome, email, cpf, tipo } = req.body;
     let comprovanteUrl = null;
 
-    // Subir para Cloudinary se houver arquivo
+    // Subir para Cloudinary se houver arquivo, mas sem quebrar a inscrição
     if (req.file) {
-      const buffer = req.file.buffer;
-      const uploadResult = await cloudinary.uploader.upload_stream(
-        { folder: "vigiaedes/comprovantes" },
-        (error, result) => {
-          if (error) throw error;
-          return result;
-        }
-      );
-
-      // Função utilitária para promisificar upload_stream
-      const streamUpload = (buffer) => {
-        return new Promise((resolve, reject) => {
-          const stream = cloudinary.uploader.upload_stream(
-            { folder: "vigiaedes/comprovantes" },
-            (error, result) => {
-              if (result) resolve(result);
-              else reject(error);
-            }
-          );
-          stream.end(buffer);
-        });
-      };
-
-      const result = await streamUpload(buffer);
-      comprovanteUrl = result.secure_url;
+      try {
+        const result = await uploadToCloudinary(req.file.buffer);
+        comprovanteUrl = result.secure_url;
+      } catch (uploadError) {
+        console.warn("⚠️ Falha ao subir comprovante para Cloudinary, prosseguindo sem ele:", uploadError.message);
+        comprovanteUrl = null; // a inscrição continua mesmo se o upload falhar
+      }
     }
 
     // Inserir no banco
@@ -72,64 +67,50 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
     const PIX_CODE = tipo === 'estudante' ? PIX_ESTUDANTE : PIX_COMUM;
     const qrCodeDataURL = await QRCode.toDataURL(PIX_CODE);
 
-    
-res.send(`
-  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <div class="container py-5" style="max-width: 500px;">
-    <div class="card shadow-sm p-4">
-      <h2 class="mb-3 text-center">Inscrição recebida!</h2>
-
-      <!-- Mensagem principal -->
-      <p class="text-center fw-bold" style="font-size:1rem; color:#333;">
-        Após a confirmação do pagamento, você receberá um e-mail com seu código de verificação.
-      </p>
-
-      <!-- Aviso de pagamento -->
-      <div class="alert alert-warning text-center fw-bold" role="alert" style="font-size:0.95rem; margin-top:0.5rem;">
-        ⚠️ Não se esqueça de efetuar o pagamento!
-      </div>
-
-      <!-- Código Pix -->
-      <div class="mb-3 mt-3">
-        <label class="form-label fw-bold">Código Pix (copie e cole)</label>
-        <div class="input-group">
-          <input type="text" id="pixCode" class="form-control" value="${PIX_CODE}" readonly>
-          <button class="btn btn-outline-secondary" type="button" onclick="copiarPix()">Copiar</button>
+    res.send(`
+      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+      <div class="container py-5" style="max-width: 500px;">
+        <div class="card shadow-sm p-4">
+          <h2 class="mb-3 text-center">Inscrição recebida!</h2>
+          <p class="text-center fw-bold" style="font-size:1rem; color:#333;">
+            Após a confirmação do pagamento, você receberá um e-mail com seu código de verificação.
+          </p>
+          <div class="alert alert-warning text-center fw-bold" role="alert" style="font-size:0.95rem; margin-top:0.5rem;">
+            ⚠️ Não se esqueça de efetuar o pagamento!
+          </div>
+          <div class="mb-3 mt-3">
+            <label class="form-label fw-bold">Código Pix (copie e cole)</label>
+            <div class="input-group">
+              <input type="text" id="pixCode" class="form-control" value="${PIX_CODE}" readonly>
+              <button class="btn btn-outline-secondary" type="button" onclick="copiarPix()">Copiar</button>
+            </div>
+          </div>
+          <div class="mb-3 text-center">
+            <img src="${qrCodeDataURL}" alt="QR Code Pix" class="img-fluid" style="max-width: 250px;">
+            <p class="small mt-2">Leia o QR Code com seu app de pagamento</p>
+          </div>
+          <div class="mb-3 text-center">
+            <a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" class="btn btn-success w-100">
+              Enviar comprovante pelo WhatsApp
+            </a>
+          </div>
+          <div class="text-center mt-3">
+            <a href="/" class="btn btn-primary w-100" style="padding:0.75rem; font-size:1.1rem; border-radius:10px;">
+              Voltar ao site
+            </a>
+          </div>
         </div>
       </div>
-
-      <!-- QR Code -->
-      <div class="mb-3 text-center">
-        <img src="${qrCodeDataURL}" alt="QR Code Pix" class="img-fluid" style="max-width: 250px;">
-        <p class="small mt-2">Leia o QR Code com seu app de pagamento</p>
-      </div>
-
-      <!-- Botão WhatsApp -->
-      <div class="mb-3 text-center">
-        <a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" class="btn btn-success w-100">
-          Enviar comprovante pelo WhatsApp
-        </a>
-      </div>
-
-      <!-- Botão Voltar grande -->
-      <div class="text-center mt-3">
-        <a href="/" class="btn btn-primary w-100" style="padding:0.75rem; font-size:1.1rem; border-radius:10px;">
-          Voltar ao site
-        </a>
-      </div>
-    </div>
-  </div>
-
-  <script>
-    function copiarPix() {
-      const copyText = document.getElementById("pixCode");
-      copyText.select();
-      copyText.setSelectionRange(0, 99999);
-      document.execCommand("copy");
-      alert("Código Pix copiado!");
-    }
-  </script>
-`);
+      <script>
+        function copiarPix() {
+          const copyText = document.getElementById("pixCode");
+          copyText.select();
+          copyText.setSelectionRange(0, 99999);
+          document.execCommand("copy");
+          alert("Código Pix copiado!");
+        }
+      </script>
+    `);
 
   } catch (err) {
     console.error("Erro na inscrição:", err);
