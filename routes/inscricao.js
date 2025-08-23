@@ -72,7 +72,7 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
     const PIX_CODE = tipo === 'estudante' ? PIX_ESTUDANTE : PIX_COMUM;
     const qrCodeDataURL = await QRCode.toDataURL(PIX_CODE);
 
-    // Resposta HTML
+    
 res.send(`
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <div class="container py-5" style="max-width: 500px;">
@@ -111,10 +111,11 @@ res.send(`
         </a>
       </div>
 
-      <!-- Botões lado a lado -->
-      <div class="d-flex justify-content-between">
-        <a href="/" class="btn btn-secondary w-45">Voltar</a>
-        <button type="button" class="btn btn-primary w-45" onclick="alert('Lembre-se de efetuar o pagamento!')">Enviar inscrição</button>
+      <!-- Botão Voltar grande -->
+      <div class="text-center mt-3">
+        <a href="/" class="btn btn-primary w-100" style="padding:0.75rem; font-size:1.1rem; border-radius:10px;">
+          Voltar ao site
+        </a>
       </div>
     </div>
   </div>
@@ -129,7 +130,6 @@ res.send(`
     }
   </script>
 `);
-
 
   } catch (err) {
     console.error("Erro na inscrição:", err);
