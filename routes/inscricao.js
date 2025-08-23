@@ -73,51 +73,63 @@ router.post('/', upload.single('comprovante'), async (req, res) => {
     const qrCodeDataURL = await QRCode.toDataURL(PIX_CODE);
 
     // Resposta HTML
-    res.send(`
-      <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-      <div class="container py-5" style="max-width: 500px;">
-        <div class="card shadow-sm p-4">
-          <h2 class="mb-3 text-center">Inscrição recebida!</h2>
-          <p class="text-center">Em breve você receberá um e-mail com os dados de pagamento via Pix.</p>
+res.send(`
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <div class="container py-5" style="max-width: 500px;">
+    <div class="card shadow-sm p-4">
+      <h2 class="mb-3 text-center">Inscrição recebida!</h2>
 
-          <!-- Código Pix -->
-          <div class="mb-3">
-            <label class="form-label fw-bold">Código Pix (copia e cola)</label>
-            <div class="input-group">
-              <input type="text" id="pixCode" class="form-control" value="${PIX_CODE}" readonly>
-              <button class="btn btn-outline-secondary" type="button" onclick="copiarPix()">Copiar</button>
-            </div>
-          </div>
+      <!-- Mensagem principal -->
+      <p class="text-center fw-bold" style="font-size:1rem; color:#333;">
+        Após a confirmação do pagamento, você receberá um e-mail com seu código de verificação.
+      </p>
 
-          <!-- QR Code -->
-          <div class="mb-3 text-center">
-            <img src="${qrCodeDataURL}" alt="QR Code Pix" class="img-fluid" style="max-width: 250px;">
-            <p class="small mt-2">Leia o QR Code com seu app de pagamento</p>
-          </div>
+      <!-- Aviso de pagamento -->
+      <div class="alert alert-warning text-center fw-bold" role="alert" style="font-size:0.95rem; margin-top:0.5rem;">
+        ⚠️ Não se esqueça de efetuar o pagamento!
+      </div>
 
-          <!-- Botão WhatsApp -->
-          <div class="mb-3 text-center">
-            <a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" class="btn btn-success w-100">
-              Enviar comprovante pelo WhatsApp
-            </a>
-          </div>
-
-          <div class="text-center">
-            <a href="/" class="btn btn-primary w-100">Voltar ao site</a>
-          </div>
+      <!-- Código Pix -->
+      <div class="mb-3 mt-3">
+        <label class="form-label fw-bold">Código Pix (copie e cole)</label>
+        <div class="input-group">
+          <input type="text" id="pixCode" class="form-control" value="${PIX_CODE}" readonly>
+          <button class="btn btn-outline-secondary" type="button" onclick="copiarPix()">Copiar</button>
         </div>
       </div>
 
-      <script>
-        function copiarPix() {
-          const copyText = document.getElementById("pixCode");
-          copyText.select();
-          copyText.setSelectionRange(0, 99999);
-          document.execCommand("copy");
-          alert("Código Pix copiado!");
-        }
-      </script>
-    `);
+      <!-- QR Code -->
+      <div class="mb-3 text-center">
+        <img src="${qrCodeDataURL}" alt="QR Code Pix" class="img-fluid" style="max-width: 250px;">
+        <p class="small mt-2">Leia o QR Code com seu app de pagamento</p>
+      </div>
+
+      <!-- Botão WhatsApp -->
+      <div class="mb-3 text-center">
+        <a href="https://wa.me/${WHATSAPP_NUMBER}" target="_blank" class="btn btn-success w-100">
+          Enviar comprovante pelo WhatsApp
+        </a>
+      </div>
+
+      <!-- Botões lado a lado -->
+      <div class="d-flex justify-content-between">
+        <a href="/" class="btn btn-secondary w-45">Voltar</a>
+        <button type="button" class="btn btn-primary w-45" onclick="alert('Lembre-se de efetuar o pagamento!')">Enviar inscrição</button>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    function copiarPix() {
+      const copyText = document.getElementById("pixCode");
+      copyText.select();
+      copyText.setSelectionRange(0, 99999);
+      document.execCommand("copy");
+      alert("Código Pix copiado!");
+    }
+  </script>
+`);
+
 
   } catch (err) {
     console.error("Erro na inscrição:", err);
