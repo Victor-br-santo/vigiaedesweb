@@ -127,11 +127,13 @@ html {
   opacity: 1;
 }
 
+/* Conteúdo central */
 .hero-content {
   position: relative;
   z-index: 2;
 }
 
+/* Botão e texto da primeira imagem */
 .hero-text {
   max-width: 600px;
 }
@@ -146,6 +148,7 @@ html {
   color: #fff;
 }
 
+/* Botão principal */
 .btn-fale-conosco {
   display: inline-block;
   margin-top: 25px;
@@ -165,6 +168,43 @@ html {
   color: #ffffff;
   transform: scale(1.05);
 }
+
+/* 🔽 Deixa o botão da segunda imagem mais embaixo */
+.hero-content-bottom {
+  align-self: flex-end;
+  margin-bottom: 100px;
+}
+
+/* 🎯 Setas laterais */
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.2);
+  border: none;
+  color: #fff;
+  font-size: 2.5rem;
+  cursor: pointer;
+  padding: 10px 18px;
+  border-radius: 50%;
+  transition: background 0.3s, transform 0.3s;
+  z-index: 10;
+  backdrop-filter: blur(4px);
+}
+
+.carousel-btn:hover {
+  background: rgba(255, 255, 255, 0.5);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.carousel-btn.prev {
+  left: 25px;
+}
+
+.carousel-btn.next {
+  right: 25px;
+}
+
 
 
 /* Serviços */
