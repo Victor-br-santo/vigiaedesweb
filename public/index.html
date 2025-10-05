@@ -67,7 +67,7 @@
     <header id="inicio" class="hero">
       <div class="carousel">
         <!-- Slide 1 -->
-        <div class="slide active" style="background-image: url('imagens/hero1.jpg');">
+        <div class="slide active" style="background-image: url('./img/imgBanner1.avif');">
           <div class="hero-content">
             <div class="hero-text">
               <h1>VigiAedes Soluções Integradas</h1>
@@ -77,9 +77,12 @@
         </div>
 
         <!-- Slide 2 -->
-        <div class="slide" style="background-image: url('imagens/hero2.jpg');">
+        <div class="slide" style="background-image: url('./img/imgBanner2.jpeg');">
           <div class="hero-content hero-content-bottom">
-            <a href="#contato" class="btn-fale-conosco">Entrar em Contato</a>
+            <a href="https://www.sympla.com.br/evento/capacitaCAo-abordagem-clInica-e-cuidados-nas-arboviroses/3156065"
+              class="btn-fale-conosco" target="_blank" rel="noopener noreferrer">
+              Inscreva-se</a>
+
           </div>
         </div>
 
@@ -368,51 +371,51 @@
   <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
 
   <script>
-  const slides = document.querySelectorAll('.slide');
-  const prevBtn = document.querySelector('.carousel-btn.prev');
-  const nextBtn = document.querySelector('.carousel-btn.next');
-  let currentSlide = 0;
-  let slideInterval;
+    const slides = document.querySelectorAll('.slide');
+    const prevBtn = document.querySelector('.carousel-btn.prev');
+    const nextBtn = document.querySelector('.carousel-btn.next');
+    let currentSlide = 0;
+    let slideInterval;
 
-  function showSlide(index) {
-    slides.forEach(slide => slide.classList.remove('active'));
-    slides[index].classList.add('active');
-  }
+    function showSlide(index) {
+      slides.forEach(slide => slide.classList.remove('active'));
+      slides[index].classList.add('active');
+    }
 
-  function nextSlide() {
-    currentSlide = (currentSlide + 1) % slides.length;
-    showSlide(currentSlide);
-  }
+    function nextSlide() {
+      currentSlide = (currentSlide + 1) % slides.length;
+      showSlide(currentSlide);
+    }
 
-  function prevSlide() {
-    currentSlide = (currentSlide - 1 + slides.length) % slides.length;
-    showSlide(currentSlide);
-  }
+    function prevSlide() {
+      currentSlide = (currentSlide - 1 + slides.length) % slides.length;
+      showSlide(currentSlide);
+    }
 
-  // Auto slide a cada 5 segundos
-  function startAutoSlide() {
-    slideInterval = setInterval(nextSlide, 5000);
-  }
+    // Auto slide a cada 5 segundos
+    function startAutoSlide() {
+      slideInterval = setInterval(nextSlide, 5000);
+    }
 
-  // Parar e reiniciar autoplay ao clicar nas setas
-  function resetAutoSlide() {
-    clearInterval(slideInterval);
+    // Parar e reiniciar autoplay ao clicar nas setas
+    function resetAutoSlide() {
+      clearInterval(slideInterval);
+      startAutoSlide();
+    }
+
+    nextBtn.addEventListener('click', () => {
+      nextSlide();
+      resetAutoSlide();
+    });
+
+    prevBtn.addEventListener('click', () => {
+      prevSlide();
+      resetAutoSlide();
+    });
+
+    // Inicia o autoplay
     startAutoSlide();
-  }
-
-  nextBtn.addEventListener('click', () => {
-    nextSlide();
-    resetAutoSlide();
-  });
-
-  prevBtn.addEventListener('click', () => {
-    prevSlide();
-    resetAutoSlide();
-  });
-
-  // Inicia o autoplay
-  startAutoSlide();
-</script>
+  </script>
 
 
 </body>
